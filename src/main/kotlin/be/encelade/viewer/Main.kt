@@ -1,7 +1,7 @@
 package be.encelade.viewer
 
 import be.encelade.viewer.frames.AssetMenu
-import be.encelade.viewer.manager.SceneManager
+import be.encelade.viewer.managers.SceneManager
 import com.jme3.system.AppSettings
 
 fun main() {

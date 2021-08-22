@@ -1,10 +1,11 @@
 package be.encelade.viewer.frames
 
-import be.encelade.viewer.manager.SceneManager
+import be.encelade.viewer.managers.SceneManager
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
 import javax.swing.*
+import javax.swing.JFileChooser.APPROVE_OPTION
 
 class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
 
@@ -48,6 +49,15 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
         southPanel.components.forEach { it.font = font }
 
         isVisible = true
+
+        importButton.addActionListener { e ->
+            val fileChooser = JFileChooser()
+            fileChooser.showOpenDialog(this)
+            val returnValue = fileChooser.showOpenDialog(importButton)
+            if (returnValue == APPROVE_OPTION) {
+                println(fileChooser.selectedFile)
+            }
+        }
     }
 
 }
