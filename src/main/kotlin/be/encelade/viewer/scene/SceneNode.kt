@@ -1,4 +1,4 @@
-package be.encelade.viewer
+package be.encelade.viewer.scene
 
 import be.encelade.chimp.material.UnshadedMaterial
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
