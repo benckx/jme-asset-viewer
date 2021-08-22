@@ -8,15 +8,39 @@ apply plugin: 'maven'
 
 repositories {
     google()
+    mavenLocal()
     mavenCentral()
-    jcenter()
+    maven { url "https://jitpack.io" }
 }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+def jmeVersion = "3.3.2-stable"
+def chimpUtilsVersion = "1.6.1"
+def ouistitiVersion = "2.0"
 
-    testCompile 'junit:junit:4.13'
+dependencies {
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+    // jme
+    compile "org.jmonkeyengine:jme3-core:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-desktop:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-lwjgl3:$jmeVersion"
+
+    // jme libs
+    compile "com.github.benckx:ouistiti:$ouistitiVersion"
+    compile "com.github.benckx.chimp-utils:chimp-utils-basics:$chimpUtilsVersion"
+    compile "com.github.benckx.chimp-utils:chimp-utils-jme3:$chimpUtilsVersion"
+
+    // logging
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'ch.qos.logback:logback-core:1.2.3'
+
+    // utils
+    compile "org.apache.commons:commons-text:1.9"
 }
