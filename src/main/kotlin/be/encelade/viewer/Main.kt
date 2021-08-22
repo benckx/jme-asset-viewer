@@ -1,5 +1,6 @@
 package be.encelade.viewer
 
 fun main() {
-    println("hello")
+    val frame = AssetFrame()
+    frame.isVisible = true
 }
