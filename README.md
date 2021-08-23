@@ -9,8 +9,8 @@
 
 3D assets made in Blender don't always appear as expected in my jMonkeyEngine game.
 
-Therefore, I made this tool to help smooth work between 3D designers and developers, by giving 3D designers a tool to
-quickly add some assets to a jMonkeyEngine scene.
+I made this tool to help smooth the work between 3D designers and developers, by providing 3D designers a simple GUI to
+quickly test assets in a jMonkeyEngine scene and change their settings at runtime.
 
 # How To
 
