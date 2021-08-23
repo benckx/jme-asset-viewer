@@ -2,9 +2,11 @@ package be.encelade.viewer.menus
 
 import be.encelade.viewer.managers.CommandQueue
 import be.encelade.viewer.managers.SceneManager
+import be.encelade.viewer.managers.commands.RotationCommand
+import be.encelade.viewer.managers.commands.ScaleCommand
+import be.encelade.viewer.managers.commands.TranslationCommand
 import be.encelade.viewer.scene.AssetNode
-import be.encelade.viewer.scene.RotationCommand
-import be.encelade.viewer.scene.TranslationCommand
+import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesFile.Companion.DEFAULT_FOLDER_KEY
@@ -12,6 +14,7 @@ import com.jme3.math.FastMath.DEG_TO_RAD
 import com.jme3.math.FastMath.RAD_TO_DEG
 import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
+import com.jme3.scene.Node
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
@@ -20,6 +23,7 @@ import javax.swing.*
 import javax.swing.JFileChooser.APPROVE_OPTION
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+
 
 class AssetMenu(private val propertiesFile: PropertiesFile,
                 private val commandQueue: CommandQueue,
@@ -43,6 +47,11 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
     private val zRotationField = JTextField("0.0")
     private val wRotationField = JTextField("0.0")
     private val rotationFields = listOf(xRotationField, yRotationField, zRotationField, wRotationField)
+
+    private val scaleField = JTextField("1.0")
+    private val scaleFields = listOf(scaleField)
+
+    private val allFields = positionFields + rotationFields + scaleFields
 
     init {
         title = defaultTitle
@@ -81,8 +90,9 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         val zRotationLabel = JLabel("rotation z:")
         val wRotationLabel = JLabel("rotation w:")
 
-        positionFields.forEach { it.isEnabled = false }
-        rotationFields.forEach { it.isEnabled = false }
+        val scaleLabel = JLabel("scale:")
+
+        allFields.forEach { it.isEnabled = false }
 
         southPanel.add(xPosLabel)
         southPanel.add(xPosField)
@@ -99,6 +109,9 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         southPanel.add(zRotationField)
         southPanel.add(wRotationLabel)
         southPanel.add(wRotationField)
+
+        southPanel.add(scaleLabel)
+        southPanel.add(scaleField)
 
         southPanel.components.forEach { it.font = font }
 
@@ -124,6 +137,16 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
             updateOnMouseWheel(field, 1f)
         }
 
+        scaleFields.forEach { field ->
+            field.document.addDocumentListener(object : DocumentListener {
+                override fun insertUpdate(e: DocumentEvent?) = updateScale()
+                override fun removeUpdate(e: DocumentEvent?) = updateScale()
+                override fun changedUpdate(e: DocumentEvent?) = updateScale()
+            })
+
+            updateOnMouseWheel(field, .05f)
+        }
+
         importButton.addActionListener {
             val fileChooser = JFileChooser()
             lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
@@ -133,8 +156,8 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                val assetNode = sceneManager.importAsset(file)
-                loadInGui(assetNode)
+                val sceneNode = sceneManager.importAsset(file)
+                loadInGui(sceneNode)
             }
         }
 
@@ -170,6 +193,16 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         }
     }
 
+    private fun updateScale() {
+        if (assetUpdateEnabled) {
+            selectedAssetNode?.let { assetNode ->
+                if (allFloats(scaleFields)) {
+                    commandQueue.push(ScaleCommand(assetNode.id, scaleField.text.toFloat()))
+                }
+            }
+        }
+    }
+
     private fun updateOnMouseWheel(field: JTextField, amount: Float) {
         field.addMouseWheelListener { e ->
             if (isFloat(field)) {
@@ -181,24 +214,29 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         }
     }
 
-    fun loadInGui(assetNode: AssetNode) {
+    fun loadInGui(sceneNode: SceneNode) {
+        loadInGui(sceneNode.assetNode, sceneNode.node)
+    }
+
+    private fun loadInGui(assetNode: AssetNode, node: Node) {
         this.selectedAssetNode = assetNode
 
         title = assetNode.fileName
 
-        val translation = assetNode.localTranslation()
+        val translation = node.localTranslation
         xPosField.text = translation.x.toString()
         yPosField.text = translation.y.toString()
         zPosField.text = translation.z.toString()
 
-        val rotation = assetNode.localRotation()
+        val rotation = node.localRotation
         xRotationField.text = (RAD_TO_DEG * rotation.x).toString()
         yRotationField.text = (RAD_TO_DEG * rotation.y).toString()
         zRotationField.text = (RAD_TO_DEG * rotation.z).toString()
         wRotationField.text = (RAD_TO_DEG * rotation.w).toString()
 
-        positionFields.forEach { field -> field.isEnabled = true }
-        rotationFields.forEach { field -> field.isEnabled = true }
+        scaleField.text = node.localScale.x.toString()
+
+        allFields.forEach { field -> field.isEnabled = true }
         deleteButton.isEnabled = true
         cloneButton.isEnabled = true
         assetUpdateEnabled = true
@@ -209,10 +247,10 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         assetUpdateEnabled = false
         deleteButton.isEnabled = false
         cloneButton.isEnabled = false
-        positionFields.forEach { it.isEnabled = false }
-        rotationFields.forEach { it.isEnabled = false }
+        allFields.forEach { it.isEnabled = false }
         positionFields.forEach { it.text = "0.0" }
         rotationFields.forEach { it.text = "0.0" }
+        scaleFields.forEach { it.text = "1.0" }
         title = defaultTitle
     }
 

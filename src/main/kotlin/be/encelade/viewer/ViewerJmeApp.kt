@@ -52,7 +52,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         // input
         mouseInputManager = MouseInputManager(this)
-        val actionListener = MyActionListener(mouseInputManager, sceneManager, assetMenu)
+        val actionListener = MyActionListener(this, mouseInputManager, sceneManager, assetMenu)
         inputManager.addListener(actionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
@@ -62,11 +62,15 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         mouseInputManager.simpleUpdate(tpf)
 
         commandQueue.flushTranslations().forEach { command ->
-            rootNode.getChild(command.id).localTranslation = command.translation
+            rootNode.getChild(command.id)?.localTranslation = command.translation
         }
 
         commandQueue.flushRotations().forEach { command ->
-            rootNode.getChild(command.id).localRotation = command.rotation
+            rootNode.getChild(command.id)?.localRotation = command.rotation
+        }
+
+        commandQueue.flushScales().forEach { command ->
+            rootNode.getChild(command.id)?.localScale = Vector3f(command.scale, command.scale, command.scale)
         }
     }
 

@@ -1,6 +1,7 @@
 package be.encelade.viewer.managers
 
 import be.encelade.viewer.scene.AssetNode
+import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import com.github.guepardoapps.kulid.ULID
 import com.jme3.app.SimpleApplication
@@ -17,7 +18,7 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
 
     private val assetNodes = mutableListOf<AssetNode>()
 
-    fun importAsset(file: File): AssetNode {
+    fun importAsset(file: File): SceneNode {
         val id = ULID.random()
 
         val splitPath = file.path.split(File.separator)
@@ -43,11 +44,12 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
         node.attachChild(spatial)
         node.move(0f, 0f, 1f)
 
-        val assetNode = AssetNode(id, splitPath.last(), node)
+        val assetNode = AssetNode(id, splitPath.last())
+        val sceneNode = SceneNode(assetNode, node)
         assetNodes += assetNode
         rootNode.attachChild(node)
 
-        return assetNode
+        return sceneNode
     }
 
     fun findById(id: String): AssetNode? {

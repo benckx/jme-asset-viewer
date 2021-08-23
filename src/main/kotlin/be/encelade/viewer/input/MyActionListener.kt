@@ -3,21 +3,26 @@ package be.encelade.viewer.input
 import be.encelade.viewer.managers.MouseInputManager
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.menus.AssetMenu
-import be.encelade.viewer.scene.AssetNode
+import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
+import com.jme3.app.SimpleApplication
 import com.jme3.input.controls.ActionListener
+import com.jme3.scene.Node
 
-class MyActionListener(private val mouseInputManager: MouseInputManager,
+class MyActionListener(app: SimpleApplication,
+                       private val mouseInputManager: MouseInputManager,
                        private val sceneManager: SceneManager,
                        private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
+
+    private val rootNode by lazy { app.rootNode }
 
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
         if (!isPressed) {
             when (name) {
                 MOUSE_CLICK -> {
-                    val assetNode = findClickedAssetNode()
-                    if (assetNode != null) {
-                        assetMenu.loadInGui(assetNode)
+                    val sceneNode = findSceneNode()
+                    if (sceneNode != null) {
+                        assetMenu.loadInGui(sceneNode)
                     } else {
                         assetMenu.unFocusAll()
                     }
@@ -26,13 +31,19 @@ class MyActionListener(private val mouseInputManager: MouseInputManager,
         }
     }
 
-    private fun findClickedAssetNode(): AssetNode? {
+    private fun findSceneNode(): SceneNode? {
         val collisionIds = mouseInputManager.collisionIds()
-        return if (collisionIds.isNotEmpty()) {
-            sceneManager.findById(collisionIds.first())
-        } else {
-            null
+        if (collisionIds.isNotEmpty()) {
+            val id = collisionIds.first()
+            val assetNode = sceneManager.findById(id)
+            val spatial = rootNode.getChild(id)
+
+            if (assetNode != null && spatial != null) {
+                return SceneNode(assetNode, spatial as Node)
+            }
         }
+
+        return null
     }
 
     companion object {
