@@ -30,7 +30,7 @@ class CursorCollisionsDetector(private val app: SimpleApplication) {
         return extractGeometryNames(detect()).filter { it != "FLOOR" }
     }
 
-    companion object {
+    private companion object {
 
         fun extractGeometryNames(collisionResults: CollisionResults): List<String> {
             return collisionResults

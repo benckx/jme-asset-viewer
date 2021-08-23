@@ -70,12 +70,14 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         }
 
         commandQueue.flushScales().forEach { command ->
-            rootNode.getChild(command.id)?.localScale = Vector3f(command.scale, command.scale, command.scale)
+            rootNode.getChild(command.id)?.localScale = command.toVector3f()
         }
     }
 
     override fun destroy() {
         super.destroy()
+
+        // exit GUI too if JME windows is stopped
         exitProcess(0)
     }
 
