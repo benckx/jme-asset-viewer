@@ -23,11 +23,12 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(separator = File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
-        val asset = assetManager.loadModel(splitPath.last())
+        val spatial = assetManager.loadModel(splitPath.last())
+        spatial.name = ulid
 
-        when (asset) {
+        when (spatial) {
             is Node ->
-                asset
+                spatial
                         .children
                         .filterIsInstance<Geometry>()
                         .forEach { geometry ->
@@ -35,13 +36,14 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
                             geometry.name = ulid
                         }
             is Geometry ->
-                asset.shadowMode = RenderQueue.ShadowMode.CastAndReceive
+                spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
         }
 
-        asset.name = ulid
-        assetNodes += AssetNode(ulid, asset)
         val node = Node(ulid)
-        node.attachChild(asset)
+        node.attachChild(spatial)
+        node.move(1f, 1f, 2f) // TODO
+
+        assetNodes += AssetNode(ulid, splitPath.last(), node)
         rootNode.attachChild(node)
     }
 

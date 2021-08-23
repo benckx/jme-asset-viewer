@@ -11,7 +11,7 @@ class CursorCollisionsDetector(private val app: SimpleApplication) {
     private val camera by lazy { app.camera }
     private val inputManager by lazy { app.inputManager }
 
-    fun detect(): CollisionResults {
+    private fun detect(): CollisionResults {
         // convert screen click to 3d position
         val cursorPosition = Vector2f(inputManager.cursorPosition)
         val click3d = camera.getWorldCoordinates(cursorPosition, 0f).clone()
@@ -26,12 +26,16 @@ class CursorCollisionsDetector(private val app: SimpleApplication) {
         return results
     }
 
+    fun detectGeometryNames(): List<String> {
+        return extractGeometryNames(detect()).filter { it != "FLOOR" }
+    }
+
     companion object {
 
-        fun findObjectIds(collisionResults: CollisionResults): Set<String> {
+        fun extractGeometryNames(collisionResults: CollisionResults): List<String> {
             return collisionResults
                     .mapNotNull { collisionResult -> collisionResult.geometry.name }
-                    .toSet()
+                    .distinct()
         }
 
     }

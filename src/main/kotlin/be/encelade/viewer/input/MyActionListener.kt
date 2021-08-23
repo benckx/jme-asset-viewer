@@ -17,7 +17,7 @@ class MyActionListener(private val mouseInputManager: MouseInputManager,
                 if (collisionIds.isNotEmpty()) {
                     logger.info("to show: ${collisionIds.first()}")
                     sceneManager.findById(collisionIds.first())?.let { assetNode ->
-                        logger.info("node: $assetNode")
+                        assetMenu.loadInGui(assetNode)
                     }
                 }
             }

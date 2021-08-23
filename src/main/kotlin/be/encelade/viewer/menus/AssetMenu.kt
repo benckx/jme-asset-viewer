@@ -1,6 +1,7 @@
 package be.encelade.viewer.menus
 
 import be.encelade.viewer.managers.SceneManager
+import be.encelade.viewer.scene.AssetNode
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
@@ -11,6 +12,10 @@ import javax.swing.JFileChooser.APPROVE_OPTION
 class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
 
     private var lastFolder: String? = null
+
+    private val xPosField = JTextField("0")
+    private val yPosField = JTextField("0")
+    private val zPosField = JTextField("0")
 
     init {
         title = "Asset"
@@ -37,11 +42,8 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
         northPanel.components.forEach { it.font = font }
 
         val xPosLabel = JLabel("x:")
-        val xPosField = JTextField("0")
         val yPosLabel = JLabel("y:")
-        val yPosField = JTextField("0")
         val zPosLabel = JLabel("z:")
-        val zPosField = JTextField("0")
 
         southPanel.add(xPosLabel)
         southPanel.add(xPosField)
@@ -63,6 +65,15 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
                 sceneManager.importAsset(file)
             }
         }
+    }
+
+    fun loadInGui(assetNode: AssetNode) {
+        title = assetNode.fileName
+
+        val localTranslation = assetNode.worldTranslation()
+        xPosField.text = localTranslation.x.toString()
+        yPosField.text = localTranslation.y.toString()
+        zPosField.text = localTranslation.z.toString()
     }
 
 }
