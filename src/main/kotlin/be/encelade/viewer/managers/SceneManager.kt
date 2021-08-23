@@ -54,4 +54,17 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
         return assetNodes.find { it.id == id }
     }
 
+    fun delete(assetNode: AssetNode) {
+        deleteById(assetNode.id)
+    }
+
+    private fun deleteById(id: String) {
+        assetNodes
+                .find { it.id == id }
+                ?.let { assetNode ->
+                    rootNode.detachChildNamed(assetNode.id)
+                    assetNodes.remove(assetNode)
+                }
+    }
+
 }

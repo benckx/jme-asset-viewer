@@ -1,8 +1,11 @@
 package be.encelade.viewer
 
 import com.jme3.system.AppSettings
+import javax.swing.UIManager
 
 fun main() {
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+
     val settings = AppSettings(true)
     settings.title = "JME asset viewer"
     settings.isFullscreen = false

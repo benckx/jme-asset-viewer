@@ -3,6 +3,8 @@ package be.encelade.viewer.menus
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.utils.LazyLogging
+import be.encelade.viewer.utils.PropertiesFile
+import be.encelade.viewer.utils.PropertiesFile.Companion.DEFAULT_FOLDER_KEY
 import com.jme3.math.FastMath.DEG_TO_RAD
 import com.jme3.math.FastMath.RAD_TO_DEG
 import com.jme3.math.Quaternion
@@ -16,11 +18,16 @@ import javax.swing.JFileChooser.APPROVE_OPTION
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging {
+class AssetMenu(private val propertiesFile: PropertiesFile,
+                private val sceneManager: SceneManager) : JFrame(), LazyLogging {
 
     private var lastFolder: String? = null
     private var selectedAssetNode: AssetNode? = null
     private var assetUpdateEnabled = false
+
+    private val importButton = JButton("Import")
+    private val cloneButton = JButton("Clone")
+    private val deleteButton = JButton("Delete")
 
     private val xPosField = JTextField("0.0")
     private val yPosField = JTextField("0.0")
@@ -35,7 +42,7 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
 
     init {
         title = defaultTitle
-        setBounds(300, 90, 200, 250)
+        setBounds(300, 90, 200, 400)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
 
@@ -53,9 +60,13 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         panel.add(southPanel, BorderLayout.SOUTH)
         add(panel)
 
-        val importButton = JButton("Import")
         northPanel.add(importButton)
+        northPanel.add(deleteButton)
+        northPanel.add(cloneButton)
         northPanel.components.forEach { it.font = font }
+
+        deleteButton.isEnabled = false
+        cloneButton.isEnabled = false
 
         val xPosLabel = JLabel("position x:")
         val yPosLabel = JLabel("position y:")
@@ -115,10 +126,23 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
             val returnValue = fileChooser.showOpenDialog(importButton)
             if (returnValue == APPROVE_OPTION) {
                 val file = fileChooser.selectedFile
-                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
+                val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
+                lastFolder = containingFolder
+                propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
                 val assetNode = sceneManager.importAsset(file)
                 loadInGui(assetNode)
             }
+        }
+
+        deleteButton.addActionListener {
+            selectedAssetNode?.let { assetNode ->
+                sceneManager.delete(assetNode)
+                unFocusAll()
+            }
+        }
+
+        propertiesFile.getProperty(DEFAULT_FOLDER_KEY)?.let { containingFolder ->
+            lastFolder = containingFolder
         }
     }
 
@@ -171,12 +195,16 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
 
         positionFields.forEach { field -> field.isEnabled = true }
         rotationFields.forEach { field -> field.isEnabled = true }
+        deleteButton.isEnabled = true
+        cloneButton.isEnabled = true
         assetUpdateEnabled = true
     }
 
-    fun unloadAll() {
+    fun unFocusAll() {
         this.selectedAssetNode = null
         assetUpdateEnabled = false
+        deleteButton.isEnabled = false
+        cloneButton.isEnabled = false
         positionFields.forEach { it.isEnabled = false }
         rotationFields.forEach { it.isEnabled = false }
         positionFields.forEach { it.text = "0.0" }

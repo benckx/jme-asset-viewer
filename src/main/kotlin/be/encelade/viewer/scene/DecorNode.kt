@@ -11,7 +11,7 @@ import com.jme3.scene.Node
 import com.jme3.scene.debug.Grid
 import com.jme3.scene.shape.Box
 
-class SceneNode : Node("MY_SCENE") {
+class DecorNode : Node("MY_SCENE") {
 
     init {
         attachChildren(makeFloor(), makeGrid())
@@ -19,8 +19,8 @@ class SceneNode : Node("MY_SCENE") {
 
     private companion object {
 
-        const val sizeX = 20
-        const val sizeY = 16
+        const val sizeX = 24
+        const val sizeY = 18
 
         fun makeFloor(): Geometry {
             val floorMat = UnshadedMaterial()

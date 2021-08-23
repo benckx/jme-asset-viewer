@@ -19,7 +19,7 @@ class MyActionListener(private val mouseInputManager: MouseInputManager,
                     if (assetNode != null) {
                         assetMenu.loadInGui(assetNode)
                     } else {
-                        assetMenu.unloadAll()
+                        assetMenu.unFocusAll()
                     }
                 }
             }
