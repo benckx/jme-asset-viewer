@@ -12,10 +12,10 @@ import java.io.File
 
 class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
 
+    private val assetNodes = mutableListOf<AssetNode>()
+
     private val assetManager by lazy { app.assetManager }
     private val rootNode by lazy { app.rootNode }
-
-    private val assetNodes = mutableListOf<AssetNode>()
 
     fun importAsset(file: File): SceneNode {
         val spatial = importSpatial(file)
@@ -36,6 +36,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
         val spatial = assetManager.loadModel(splitPath.last())
+        spatial.name = name
 
         when (spatial) {
             is Node ->
@@ -67,28 +68,27 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
     }
 
     fun cloneById(id: String): SceneNode? {
-        assetNodes
-                .find { it.id == id }
-                ?.let { sourceAssetNode ->
-                    val spatial = importSpatial(sourceAssetNode.file)
-                    val sourceNode = rootNode.getChild(sourceAssetNode.id)
+        val sourceAssetNode = assetNodes.find { it.id == id }
+        val sourceNode = rootNode.getChild(id)
 
-                    if (sourceNode != null) {
-                        val assetNode = AssetNode(spatial.name, File(sourceAssetNode.file.name))
-                        val node = Node(spatial.name)
-                        node.attachChild(spatial)
-                        node.localTranslation = sourceNode.localTranslation
-                        node.localRotation = sourceNode.localRotation
-                        node.localScale = sourceNode.localScale
+        if (sourceAssetNode != null && sourceNode != null) {
+            val file = File(sourceAssetNode.file.name)
+            val spatial = importSpatial(file)
 
-                        assetNodes += assetNode
-                        rootNode.attachChild(node)
+            val assetNode = AssetNode(spatial.name, file)
+            val node = Node(spatial.name)
+            node.attachChild(spatial)
+            node.localTranslation = sourceNode.localTranslation
+            node.localRotation = sourceNode.localRotation
+            node.localScale = sourceNode.localScale
 
-                        return SceneNode(assetNode, node)
-                    }
-                }
+            assetNodes += assetNode
+            rootNode.attachChild(node)
 
-        return null
+            return SceneNode(assetNode, node)
+        } else {
+            return null
+        }
     }
 
 }
