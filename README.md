@@ -4,7 +4,10 @@
 
 # About
 
-Template (i.e. cookie cutter project) for my Kotlin / Gradle projects.
+3D assets made in Blender don't always appear as expected in my jMonkeyEngine game.
+
+Therefore, I made this tool, which is aimed at helping smooth work between 3D modellers and developers, by giving 3D
+modellers a tool to quickly add some assets to a jMonkeyEngine scene.
 
 # How To
 

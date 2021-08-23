@@ -4,10 +4,13 @@ import be.encelade.viewer.managers.SceneManager
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
+import java.io.File
 import javax.swing.*
 import javax.swing.JFileChooser.APPROVE_OPTION
 
 class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
+
+    private var lastFolder: String? = null
 
     init {
         title = "Asset"
@@ -50,12 +53,14 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
 
         isVisible = true
 
-        importButton.addActionListener { e ->
+        importButton.addActionListener {
             val fileChooser = JFileChooser()
-            fileChooser.showOpenDialog(this)
+            lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
             val returnValue = fileChooser.showOpenDialog(importButton)
             if (returnValue == APPROVE_OPTION) {
-                println(fileChooser.selectedFile)
+                val file = fileChooser.selectedFile
+                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(separator = File.separator)
+                sceneManager.importAsset(file)
             }
         }
     }
