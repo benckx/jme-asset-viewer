@@ -16,7 +16,21 @@ quickly add some assets to a jMonkeyEngine scene.
 
 ## Run
 
-Run the Main file. There is no runnable yet.
+Run the Main file in your favorite IDE. There is no binary runnable yet.
+
+### Arguments
+
+- `skip-jme` doesn't show the JME setting window on start-up
+
+## Navigate the Scene
+
+- Move with right-click or WASD keys
+- Zoom in and out with mouse wheel
+- Rotate with B and N or by pressing Left Control when moving with right-click
+
+The app uses the *ouistiti* camera manager, check README for more information:
+
+https://github.com/benckx/ouistiti
 
 ## Build
 

@@ -3,11 +3,11 @@ package be.encelade.viewer
 import com.jme3.system.AppSettings
 import javax.swing.UIManager
 
-fun main() {
+fun main(args: Array<String>) {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
     val settings = AppSettings(true)
-    settings.title = "JME asset viewer"
+    settings.title = "JME Asset Viewer"
     settings.isFullscreen = false
     settings.samples = 16
     settings.isVSync = false
@@ -16,7 +16,7 @@ fun main() {
 
     val simpleApp = ViewerJmeApp()
     simpleApp.setSettings(settings)
-    simpleApp.isShowSettings = false
+    simpleApp.isShowSettings = !args.contains("skip-jme")
     simpleApp.isPauseOnLostFocus = false
     simpleApp.start()
 }
