@@ -3,6 +3,9 @@ package be.encelade.viewer.menus
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.utils.LazyLogging
+import com.jme3.math.FastMath.DEG_TO_RAD
+import com.jme3.math.FastMath.RAD_TO_DEG
+import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
 import java.awt.BorderLayout
 import java.awt.Font
@@ -22,12 +25,17 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
     private val xPosField = JTextField("0.0")
     private val yPosField = JTextField("0.0")
     private val zPosField = JTextField("0.0")
-
     private val positionFields = listOf(xPosField, yPosField, zPosField)
+
+    private val xRotationField = JTextField("0.0")
+    private val yRotationField = JTextField("0.0")
+    private val zRotationField = JTextField("0.0")
+    private val wRotationField = JTextField("0.0")
+    private val rotationFields = listOf(xRotationField, yRotationField, zRotationField, wRotationField)
 
     init {
         title = defaultTitle
-        setBounds(300, 90, 200, 150)
+        setBounds(300, 90, 200, 250)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
 
@@ -49,11 +57,17 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         northPanel.add(importButton)
         northPanel.components.forEach { it.font = font }
 
-        val xPosLabel = JLabel("x:")
-        val yPosLabel = JLabel("y:")
-        val zPosLabel = JLabel("z:")
+        val xPosLabel = JLabel("position x:")
+        val yPosLabel = JLabel("position y:")
+        val zPosLabel = JLabel("position z:")
+
+        val xRotationLabel = JLabel("rotation x:")
+        val yRotationLabel = JLabel("rotation y:")
+        val zRotationLabel = JLabel("rotation z:")
+        val wRotationLabel = JLabel("rotation w:")
 
         positionFields.forEach { it.isEnabled = false }
+        rotationFields.forEach { it.isEnabled = false }
 
         southPanel.add(xPosLabel)
         southPanel.add(xPosField)
@@ -61,6 +75,16 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         southPanel.add(yPosField)
         southPanel.add(zPosLabel)
         southPanel.add(zPosField)
+
+        southPanel.add(xRotationLabel)
+        southPanel.add(xRotationField)
+        southPanel.add(yRotationLabel)
+        southPanel.add(yRotationField)
+        southPanel.add(zRotationLabel)
+        southPanel.add(zRotationField)
+        southPanel.add(wRotationLabel)
+        southPanel.add(wRotationField)
+
         southPanel.components.forEach { it.font = font }
 
         isVisible = true
@@ -71,7 +95,7 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
             val returnValue = fileChooser.showOpenDialog(importButton)
             if (returnValue == APPROVE_OPTION) {
                 val file = fileChooser.selectedFile
-                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(separator = File.separator)
+                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 sceneManager.importAsset(file)
             }
         }
@@ -83,15 +107,31 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
                 override fun changedUpdate(e: DocumentEvent?) = updatePosition()
             })
         }
+
+        rotationFields.forEach { field ->
+            field.document.addDocumentListener(object : DocumentListener {
+                override fun insertUpdate(e: DocumentEvent?) = updateRotation()
+                override fun removeUpdate(e: DocumentEvent?) = updateRotation()
+                override fun changedUpdate(e: DocumentEvent?) = updateRotation()
+            })
+        }
     }
 
     private fun updatePosition() {
         if (assetUpdateEnabled) {
             selectedAssetNode?.let { assetNode ->
-                if (positionFields.all { isFloat(it) }) {
-                    val position = Vector3f(xPosField.text.toFloat(), yPosField.text.toFloat(), zPosField.text.toFloat())
-                    logger.debug("new position: $position")
-                    assetNode.node.localTranslation = position
+                if (allFloats(positionFields)) {
+                    assetNode.node.localTranslation = toVector3f(positionFields)
+                }
+            }
+        }
+    }
+
+    private fun updateRotation() {
+        if (assetUpdateEnabled) {
+            selectedAssetNode?.let { assetNode ->
+                if (allFloats(rotationFields)) {
+                    assetNode.node.localRotation = toQuaternion(rotationFields)
                 }
             }
         }
@@ -107,16 +147,25 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         yPosField.text = translation.y.toString()
         zPosField.text = translation.z.toString()
 
+        val rotation = assetNode.localRotation()
+        xRotationField.text = (RAD_TO_DEG * rotation.x).toString()
+        yRotationField.text = (RAD_TO_DEG * rotation.y).toString()
+        zRotationField.text = (RAD_TO_DEG * rotation.z).toString()
+        wRotationField.text = (RAD_TO_DEG * rotation.w).toString()
+
         positionFields.forEach { field -> field.isEnabled = true }
+        rotationFields.forEach { field -> field.isEnabled = true }
         assetUpdateEnabled = true
     }
 
     fun unloadAll() {
         this.selectedAssetNode = null
-        positionFields.forEach { it.isEnabled = false }
-        positionFields.forEach { it.text = "0.0" }
-        title = defaultTitle
         assetUpdateEnabled = false
+        positionFields.forEach { it.isEnabled = false }
+        rotationFields.forEach { it.isEnabled = false }
+        positionFields.forEach { it.text = "0.0" }
+        rotationFields.forEach { it.text = "0.0" }
+        title = defaultTitle
     }
 
     private companion object {
@@ -134,6 +183,31 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
 
         fun isFloat(field: JTextField): Boolean {
             return isFloat(field.text)
+        }
+
+        fun allFloats(fields: List<JTextField>): Boolean {
+            return fields.all { field -> isFloat(field) }
+        }
+
+        fun toVector3f(fields: List<JTextField>): Vector3f {
+            if (fields.size == 3) {
+                return Vector3f(fields[0].text.toFloat(), fields[1].text.toFloat(), fields[2].text.toFloat())
+            } else {
+                throw IllegalArgumentException("Vector3f needs 3 fields, found ${fields.size}")
+            }
+        }
+
+        fun toQuaternion(fields: List<JTextField>): Quaternion {
+            if (fields.size == 4) {
+                return Quaternion(
+                        DEG_TO_RAD * fields[0].text.toFloat(),
+                        DEG_TO_RAD * fields[1].text.toFloat(),
+                        DEG_TO_RAD * fields[2].text.toFloat(),
+                        DEG_TO_RAD * fields[3].text.toFloat()
+                )
+            } else {
+                throw IllegalArgumentException("Quaternion needs 4 fields, found ${fields.size}")
+            }
         }
 
     }

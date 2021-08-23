@@ -18,13 +18,13 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
     private val assetNodes = mutableListOf<AssetNode>()
 
     fun importAsset(file: File) {
-        val ulid = ULID.random()
+        val id = ULID.random()
 
         val splitPath = file.path.split(File.separator)
-        val containingFolder = splitPath.dropLast(1).joinToString(separator = File.separator)
+        val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
         val spatial = assetManager.loadModel(splitPath.last())
-        spatial.name = ulid
+        spatial.name = id
 
         when (spatial) {
             is Node ->
@@ -33,17 +33,17 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
                         .filterIsInstance<Geometry>()
                         .forEach { geometry ->
                             geometry.shadowMode = RenderQueue.ShadowMode.CastAndReceive
-                            geometry.name = ulid
+                            geometry.name = id
                         }
             is Geometry ->
                 spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
         }
 
-        val node = Node(ulid)
+        val node = Node(id)
         node.attachChild(spatial)
-        node.move(1f, 1f, 2f) // TODO
+        node.move(0f, 0f, 1f)
 
-        assetNodes += AssetNode(ulid, splitPath.last(), node)
+        assetNodes += AssetNode(id, splitPath.last(), node)
         rootNode.attachChild(node)
     }
 

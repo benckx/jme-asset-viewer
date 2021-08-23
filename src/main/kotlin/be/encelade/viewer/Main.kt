@@ -14,5 +14,6 @@ fun main() {
     val simpleApp = ViewerJmeApp()
     simpleApp.setSettings(settings)
     simpleApp.isShowSettings = false
+    simpleApp.isPauseOnLostFocus = false
     simpleApp.start()
 }
