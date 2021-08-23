@@ -89,17 +89,6 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
 
         isVisible = true
 
-        importButton.addActionListener {
-            val fileChooser = JFileChooser()
-            lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
-            val returnValue = fileChooser.showOpenDialog(importButton)
-            if (returnValue == APPROVE_OPTION) {
-                val file = fileChooser.selectedFile
-                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
-                sceneManager.importAsset(file)
-            }
-        }
-
         positionFields.forEach { field ->
             field.document.addDocumentListener(object : DocumentListener {
                 override fun insertUpdate(e: DocumentEvent?) = updatePosition()
@@ -118,6 +107,18 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
             })
 
             updateOnMouseWheel(field, 1f)
+        }
+
+        importButton.addActionListener {
+            val fileChooser = JFileChooser()
+            lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
+            val returnValue = fileChooser.showOpenDialog(importButton)
+            if (returnValue == APPROVE_OPTION) {
+                val file = fileChooser.selectedFile
+                lastFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
+                val assetNode = sceneManager.importAsset(file)
+                loadInGui(assetNode)
+            }
         }
     }
 
@@ -145,8 +146,8 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         field.addMouseWheelListener { e ->
             if (isFloat(field)) {
                 val value = field.text.toFloat()
-                val actualAmount = e.wheelRotation * amount
-                val newValue = value + actualAmount
+                val delta = e.wheelRotation * amount * -1f
+                val newValue = value + delta
                 field.text = newValue.toString()
             }
         }

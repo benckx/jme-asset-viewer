@@ -17,7 +17,7 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
 
     private val assetNodes = mutableListOf<AssetNode>()
 
-    fun importAsset(file: File) {
+    fun importAsset(file: File): AssetNode {
         val id = ULID.random()
 
         val splitPath = file.path.split(File.separator)
@@ -43,8 +43,11 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
         node.attachChild(spatial)
         node.move(0f, 0f, 1f)
 
-        assetNodes += AssetNode(id, splitPath.last(), node)
+        val assetNode = AssetNode(id, splitPath.last(), node)
+        assetNodes += assetNode
         rootNode.attachChild(node)
+
+        return assetNode
     }
 
     fun findById(id: String): AssetNode? {
