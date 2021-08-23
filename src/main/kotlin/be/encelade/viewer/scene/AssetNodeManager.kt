@@ -19,34 +19,19 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
 
     fun importAsset(file: File): SceneNode {
         val spatial = importSpatial(file)
-
-        when (spatial) {
-            is Node ->
-                spatial
-                        .children
-                        .filterIsInstance<Geometry>()
-                        .forEach { geometry ->
-                            geometry.shadowMode = RenderQueue.ShadowMode.CastAndReceive
-                            geometry.name = spatial.name
-                        }
-            is Geometry ->
-                spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
-        }
-
         val node = Node(spatial.name)
         node.attachChild(spatial)
         node.move(0f, 0f, 1f)
 
         val assetNode = AssetNode(spatial.name, file)
-        val sceneNode = SceneNode(assetNode, node)
         assetNodes += assetNode
         rootNode.attachChild(node)
 
-        return sceneNode
+        return SceneNode(assetNode, node)
     }
 
     private fun importSpatial(file: File): Spatial {
-        val id = ULID.random()
+        val name = ULID.random()
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
@@ -59,7 +44,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
                         .filterIsInstance<Geometry>()
                         .forEach { geometry ->
                             geometry.shadowMode = RenderQueue.ShadowMode.CastAndReceive
-                            geometry.name = id
+                            geometry.name = name
                         }
             is Geometry ->
                 spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
@@ -81,7 +66,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
                 }
     }
 
-    fun clone(id: String): SceneNode? {
+    fun cloneById(id: String): SceneNode? {
         assetNodes
                 .find { it.id == id }
                 ?.let { sourceAssetNode ->
@@ -89,7 +74,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
                     val sourceNode = rootNode.getChild(sourceAssetNode.id)
 
                     if (sourceNode != null) {
-                        val assetNode = AssetNode(spatial.name, sourceAssetNode.file)
+                        val assetNode = AssetNode(spatial.name, File(sourceAssetNode.file.name))
                         val node = Node(spatial.name)
                         node.attachChild(spatial)
                         node.localTranslation = sourceNode.localTranslation
