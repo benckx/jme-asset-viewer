@@ -1,7 +1,10 @@
 package be.encelade.viewer.menus
 
+import be.encelade.viewer.managers.CommandQueue
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.scene.AssetNode
+import be.encelade.viewer.scene.RotationCommand
+import be.encelade.viewer.scene.TranslationCommand
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesFile.Companion.DEFAULT_FOLDER_KEY
@@ -19,6 +22,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 class AssetMenu(private val propertiesFile: PropertiesFile,
+                private val commandQueue: CommandQueue,
                 private val sceneManager: SceneManager) : JFrame(), LazyLogging {
 
     private var lastFolder: String? = null
@@ -150,7 +154,7 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         if (assetUpdateEnabled) {
             selectedAssetNode?.let { assetNode ->
                 if (allFloats(positionFields)) {
-                    assetNode.node.localTranslation = toVector3f(positionFields)
+                    commandQueue.push(TranslationCommand(assetNode.id, toVector3f(positionFields)))
                 }
             }
         }
@@ -160,7 +164,7 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
         if (assetUpdateEnabled) {
             selectedAssetNode?.let { assetNode ->
                 if (allFloats(rotationFields)) {
-                    assetNode.node.localRotation = toQuaternion(rotationFields)
+                    commandQueue.push(RotationCommand(assetNode.id, toQuaternion(rotationFields)))
                 }
             }
         }

@@ -5,6 +5,7 @@ import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.input.MyActionListener
 import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
+import be.encelade.viewer.managers.CommandQueue
 import be.encelade.viewer.managers.MouseInputManager
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.menus.AssetMenu
@@ -22,6 +23,8 @@ import com.jme3.shadow.DirectionalLightShadowRenderer
 import kotlin.system.exitProcess
 
 class ViewerJmeApp : SimpleApplication(), LazyLogging {
+
+    private val commandQueue = CommandQueue()
 
     private lateinit var cameraManager: CameraManager
     private lateinit var mouseInputManager: MouseInputManager
@@ -45,7 +48,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         // load menus and managers
         val sceneManager = SceneManager(this)
-        assetMenu = AssetMenu(propertiesFile, sceneManager)
+        assetMenu = AssetMenu(propertiesFile, commandQueue, sceneManager)
 
         // input
         mouseInputManager = MouseInputManager(this)
@@ -57,6 +60,14 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
+
+        commandQueue.flushTranslations().forEach { command ->
+            rootNode.getChild(command.id).localTranslation = command.translation
+        }
+
+        commandQueue.flushRotations().forEach { command ->
+            rootNode.getChild(command.id).localRotation = command.rotation
+        }
     }
 
     override fun destroy() {
