@@ -3,8 +3,15 @@ package be.encelade.viewer
 import be.encelade.chimp.material.MaterialDefinitions
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
+import be.encelade.viewer.input.MyActionListener
+import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
+import be.encelade.viewer.managers.MouseInputManager
+import be.encelade.viewer.managers.SceneManager
+import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.SceneNode
 import com.jme3.app.SimpleApplication
+import com.jme3.input.MouseInput.BUTTON_LEFT
+import com.jme3.input.controls.MouseButtonTrigger
 import com.jme3.light.AmbientLight
 import com.jme3.light.DirectionalLight
 import com.jme3.math.ColorRGBA.White
@@ -15,6 +22,7 @@ import kotlin.system.exitProcess
 class ViewerJmeApp : SimpleApplication() {
 
     private lateinit var cameraManager: CameraManager
+    private lateinit var mouseInputManager: MouseInputManager
 
     override fun simpleInitApp() {
         // init chimp-utils API for materials
@@ -28,10 +36,21 @@ class ViewerJmeApp : SimpleApplication() {
         viewPort.backgroundColor = ColorRGBA("#1c3064")
         rootNode.attachChild(SceneNode())
         addLighting()
+
+        // load menus and managers
+        val sceneManager = SceneManager(this)
+        val assetMenu = AssetMenu(sceneManager)
+
+        // input
+        mouseInputManager = MouseInputManager(this)
+        val actionListener = MyActionListener(mouseInputManager, sceneManager, assetMenu)
+        inputManager.addListener(actionListener, MOUSE_CLICK)
+        inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
 
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
+        mouseInputManager.simpleUpdate(tpf)
     }
 
     override fun destroy() {

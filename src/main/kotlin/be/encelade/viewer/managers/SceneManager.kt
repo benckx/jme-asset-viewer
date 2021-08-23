@@ -8,7 +8,6 @@ import com.jme3.asset.plugins.FileLocator
 import com.jme3.renderer.queue.RenderQueue
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
-import com.jme3.scene.Spatial
 import java.io.File
 
 class SceneManager(private val app: SimpleApplication) : LazyLogging {
@@ -19,6 +18,8 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
     private val assetNodes = mutableListOf<AssetNode>()
 
     fun importAsset(file: File) {
+        val ulid = ULID.random()
+
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(separator = File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
@@ -31,21 +32,21 @@ class SceneManager(private val app: SimpleApplication) : LazyLogging {
                         .filterIsInstance<Geometry>()
                         .forEach { geometry ->
                             geometry.shadowMode = RenderQueue.ShadowMode.CastAndReceive
+                            geometry.name = ulid
                         }
             is Geometry ->
                 asset.shadowMode = RenderQueue.ShadowMode.CastAndReceive
         }
 
-        addToScene(asset)
+        asset.name = ulid
+        assetNodes += AssetNode(ulid, asset)
+        val node = Node(ulid)
+        node.attachChild(asset)
+        rootNode.attachChild(node)
     }
 
-    private fun addToScene(spatial: Spatial) {
-        val ulid = ULID.random()
-        assetNodes += AssetNode(ulid, spatial)
-
-        val node = Node(ulid)
-        node.attachChild(spatial)
-        rootNode.attachChild(node)
+    fun findById(id: String): AssetNode? {
+        return assetNodes.find { it.id == id }
     }
 
 }

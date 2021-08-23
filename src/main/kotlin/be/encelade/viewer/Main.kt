@@ -1,7 +1,5 @@
 package be.encelade.viewer
 
-import be.encelade.viewer.frames.AssetMenu
-import be.encelade.viewer.managers.SceneManager
 import com.jme3.system.AppSettings
 
 fun main() {
@@ -16,10 +14,5 @@ fun main() {
     val simpleApp = ViewerJmeApp()
     simpleApp.setSettings(settings)
     simpleApp.isShowSettings = false
-
-    val sceneManager = SceneManager(simpleApp)
-
-    // start
-    AssetMenu(sceneManager)
     simpleApp.start()
 }

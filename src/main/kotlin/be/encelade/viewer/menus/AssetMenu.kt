@@ -1,4 +1,4 @@
-package be.encelade.viewer.frames
+package be.encelade.viewer.menus
 
 import be.encelade.viewer.managers.SceneManager
 import java.awt.BorderLayout
