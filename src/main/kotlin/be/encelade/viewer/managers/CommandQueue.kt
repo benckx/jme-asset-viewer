@@ -4,6 +4,9 @@ import be.encelade.viewer.managers.commands.RotationCommand
 import be.encelade.viewer.managers.commands.ScaleCommand
 import be.encelade.viewer.managers.commands.TranslationCommand
 
+/**
+ * Ensure the Scene is modified only by the JME thread.
+ */
 class CommandQueue {
 
     private val translationCommands = mutableListOf<TranslationCommand>()

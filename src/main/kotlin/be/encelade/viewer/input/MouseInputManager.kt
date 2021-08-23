@@ -1,6 +1,7 @@
-package be.encelade.viewer.managers
+package be.encelade.viewer.input
 
 import be.encelade.chimp.tpf.TpfReceiver
+import be.encelade.viewer.managers.CursorCollisionsDetector
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.app.SimpleApplication
 

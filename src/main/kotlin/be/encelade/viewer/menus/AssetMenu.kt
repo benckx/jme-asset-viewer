@@ -1,7 +1,7 @@
 package be.encelade.viewer.menus
 
+import be.encelade.viewer.managers.AssetNodeManager
 import be.encelade.viewer.managers.CommandQueue
-import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.managers.commands.RotationCommand
 import be.encelade.viewer.managers.commands.ScaleCommand
 import be.encelade.viewer.managers.commands.TranslationCommand
@@ -24,10 +24,10 @@ import javax.swing.JFileChooser.APPROVE_OPTION
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-
+// TODO: remove assetNodeManager -> manage all operations via the queue
 class AssetMenu(private val propertiesFile: PropertiesFile,
                 private val commandQueue: CommandQueue,
-                private val sceneManager: SceneManager) : JFrame(), LazyLogging {
+                private val assetNodeManager: AssetNodeManager) : JFrame(), LazyLogging {
 
     private var lastFolder: String? = null
     private var selectedAssetNode: AssetNode? = null
@@ -156,14 +156,14 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                val sceneNode = sceneManager.importAsset(file)
+                val sceneNode = assetNodeManager.importAsset(file)
                 loadInGui(sceneNode)
             }
         }
 
         deleteButton.addActionListener {
             selectedAssetNode?.let { assetNode ->
-                sceneManager.delete(assetNode)
+                assetNodeManager.delete(assetNode)
                 unFocusAll()
             }
         }

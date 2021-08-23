@@ -11,7 +11,7 @@ import com.jme3.scene.Geometry
 import com.jme3.scene.Node
 import java.io.File
 
-class SceneManager(private val app: SimpleApplication) : LazyLogging {
+class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
 
     private val assetManager by lazy { app.assetManager }
     private val rootNode by lazy { app.rootNode }

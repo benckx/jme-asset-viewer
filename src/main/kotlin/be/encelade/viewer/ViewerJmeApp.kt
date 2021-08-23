@@ -3,11 +3,11 @@ package be.encelade.viewer
 import be.encelade.chimp.material.MaterialDefinitions
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
+import be.encelade.viewer.input.MouseInputManager
 import be.encelade.viewer.input.MyActionListener
 import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
+import be.encelade.viewer.managers.AssetNodeManager
 import be.encelade.viewer.managers.CommandQueue
-import be.encelade.viewer.managers.MouseInputManager
-import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.DecorNode
 import be.encelade.viewer.utils.LazyLogging
@@ -47,12 +47,12 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         val propertiesFile = PropertiesFile("preferences.properties")
 
         // load menus and managers
-        val sceneManager = SceneManager(this)
-        assetMenu = AssetMenu(propertiesFile, commandQueue, sceneManager)
+        val assetNodeManager = AssetNodeManager(this)
+        assetMenu = AssetMenu(propertiesFile, commandQueue, assetNodeManager)
 
         // input
         mouseInputManager = MouseInputManager(this)
-        val actionListener = MyActionListener(this, mouseInputManager, sceneManager, assetMenu)
+        val actionListener = MyActionListener(this, mouseInputManager, assetNodeManager, assetMenu)
         inputManager.addListener(actionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
