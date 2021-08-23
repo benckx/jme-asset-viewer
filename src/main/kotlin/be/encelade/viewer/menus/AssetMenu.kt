@@ -149,7 +149,13 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                commandQueue.push(ImportAssetCommand(file) { sceneNode -> loadInGui(sceneNode) })
+                commandQueue.push(ImportAssetCommand(file) { sceneNode -> showInForm(sceneNode) })
+            }
+        }
+
+        cloneButton.addActionListener {
+            selectedAssetNode?.let { assetNode ->
+                commandQueue.push(CloneCommand(assetNode.id) { sceneNode -> showInForm(sceneNode) })
             }
         }
 
@@ -205,11 +211,11 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
         }
     }
 
-    fun loadInGui(sceneNode: SceneNode) {
-        loadInGui(sceneNode.assetNode, sceneNode.node)
+    fun showInForm(sceneNode: SceneNode) {
+        showInForm(sceneNode.assetNode, sceneNode.node)
     }
 
-    private fun loadInGui(assetNode: AssetNode, node: Node) {
+    private fun showInForm(assetNode: AssetNode, node: Node) {
         this.selectedAssetNode = assetNode
 
         title = assetNode.fileName

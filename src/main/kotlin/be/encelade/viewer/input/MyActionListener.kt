@@ -21,7 +21,7 @@ class MyActionListener(app: SimpleApplication,
                 MOUSE_CLICK -> {
                     val sceneNode = findSceneNode()
                     if (sceneNode != null) {
-                        assetMenu.loadInGui(sceneNode)
+                        assetMenu.showInForm(sceneNode)
                     } else {
                         assetMenu.unFocusAll()
                     }

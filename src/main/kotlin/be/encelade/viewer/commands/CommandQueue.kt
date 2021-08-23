@@ -1,12 +1,15 @@
 package be.encelade.viewer.commands
 
 /**
- * Ensure the Scene is modified only by the JME thread.
+ * Ensure the Scene is modified only by the JME thread, so the GUI sends commands that the JME thread will execute,
+ * instead of the GUI directly changing the scene.
  */
 class CommandQueue {
 
     private val importAssetCommands = mutableListOf<ImportAssetCommand>()
     private val deleteAssetNodeCommands = mutableListOf<DeleteAssetNodeCommand>()
+    private val cloneCommands = mutableListOf<CloneCommand>()
+
     private val translationCommands = mutableListOf<TranslationCommand>()
     private val rotationCommands = mutableListOf<RotationCommand>()
     private val scaleCommands = mutableListOf<ScaleCommand>()
@@ -17,6 +20,10 @@ class CommandQueue {
 
     fun push(command: DeleteAssetNodeCommand) {
         deleteAssetNodeCommands += command
+    }
+
+    fun push(command: CloneCommand) {
+        cloneCommands += command
     }
 
     fun push(command: TranslationCommand) {
@@ -34,6 +41,8 @@ class CommandQueue {
     fun flushImports() = flushCommands(importAssetCommands)
 
     fun flushDeletes() = flushCommands(deleteAssetNodeCommands)
+
+    fun flushClones() = flushCommands(cloneCommands)
 
     fun flushTranslations() = flushCommands(translationCommands)
 

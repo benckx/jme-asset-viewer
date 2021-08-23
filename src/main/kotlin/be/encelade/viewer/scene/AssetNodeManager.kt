@@ -7,6 +7,7 @@ import com.jme3.asset.plugins.FileLocator
 import com.jme3.renderer.queue.RenderQueue
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
+import com.jme3.scene.Spatial
 import java.io.File
 
 class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
@@ -17,13 +18,39 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
     private val assetNodes = mutableListOf<AssetNode>()
 
     fun importAsset(file: File): SceneNode {
-        val id = ULID.random()
+        val spatial = importSpatial(file)
 
+        when (spatial) {
+            is Node ->
+                spatial
+                        .children
+                        .filterIsInstance<Geometry>()
+                        .forEach { geometry ->
+                            geometry.shadowMode = RenderQueue.ShadowMode.CastAndReceive
+                            geometry.name = spatial.name
+                        }
+            is Geometry ->
+                spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
+        }
+
+        val node = Node(spatial.name)
+        node.attachChild(spatial)
+        node.move(0f, 0f, 1f)
+
+        val assetNode = AssetNode(spatial.name, file)
+        val sceneNode = SceneNode(assetNode, node)
+        assetNodes += assetNode
+        rootNode.attachChild(node)
+
+        return sceneNode
+    }
+
+    private fun importSpatial(file: File): Spatial {
+        val id = ULID.random()
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
         assetManager.registerLocator(containingFolder, FileLocator::class.java)
         val spatial = assetManager.loadModel(splitPath.last())
-        spatial.name = id
 
         when (spatial) {
             is Node ->
@@ -38,24 +65,11 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
                 spatial.shadowMode = RenderQueue.ShadowMode.CastAndReceive
         }
 
-        val node = Node(id)
-        node.attachChild(spatial)
-        node.move(0f, 0f, 1f)
-
-        val assetNode = AssetNode(id, splitPath.last())
-        val sceneNode = SceneNode(assetNode, node)
-        assetNodes += assetNode
-        rootNode.attachChild(node)
-
-        return sceneNode
+        return spatial
     }
 
     fun findById(id: String): AssetNode? {
         return assetNodes.find { it.id == id }
-    }
-
-    fun delete(assetNode: AssetNode) {
-        deleteById(assetNode.id)
     }
 
     fun deleteById(id: String) {
@@ -65,6 +79,31 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
                     rootNode.detachChildNamed(assetNode.id)
                     assetNodes.remove(assetNode)
                 }
+    }
+
+    fun clone(id: String): SceneNode? {
+        assetNodes
+                .find { it.id == id }
+                ?.let { sourceAssetNode ->
+                    val spatial = importSpatial(sourceAssetNode.file)
+                    val sourceNode = rootNode.getChild(sourceAssetNode.id)
+
+                    if (sourceNode != null) {
+                        val assetNode = AssetNode(spatial.name, sourceAssetNode.file)
+                        val node = Node(spatial.name)
+                        node.attachChild(spatial)
+                        node.localTranslation = sourceNode.localTranslation
+                        node.localRotation = sourceNode.localRotation
+                        node.localScale = sourceNode.localScale
+
+                        assetNodes += assetNode
+                        rootNode.attachChild(node)
+
+                        return SceneNode(assetNode, node)
+                    }
+                }
+
+        return null
     }
 
 }

@@ -69,6 +69,14 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         commandQueue.flushDeletes().forEach { command ->
             assetNodeManager.deleteById(command.id)
+            command.callback()
+        }
+
+        commandQueue.flushClones().forEach { command ->
+            assetNodeManager.clone(command.id)?.let { sceneNode ->
+                command.callback(sceneNode)
+                sceneNode.node.move(0f,1f,0f)
+            }
         }
 
         commandQueue.flushTranslations().forEach { command ->
