@@ -74,8 +74,8 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         commandQueue.flushClones().forEach { command ->
             assetNodeManager.clone(command.id)?.let { sceneNode ->
+                sceneNode.node.move(0f, 1f, 0f)
                 command.callback(sceneNode)
-                sceneNode.node.move(0f,1f,0f)
             }
         }
 
