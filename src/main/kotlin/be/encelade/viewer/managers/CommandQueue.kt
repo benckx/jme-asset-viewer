@@ -1,5 +1,6 @@
 package be.encelade.viewer.managers
 
+import be.encelade.viewer.managers.commands.ImportAssetCommand
 import be.encelade.viewer.managers.commands.RotationCommand
 import be.encelade.viewer.managers.commands.ScaleCommand
 import be.encelade.viewer.managers.commands.TranslationCommand
@@ -9,9 +10,14 @@ import be.encelade.viewer.managers.commands.TranslationCommand
  */
 class CommandQueue {
 
+    private val importAssetCommands = mutableListOf<ImportAssetCommand>()
     private val translationCommands = mutableListOf<TranslationCommand>()
     private val rotationCommands = mutableListOf<RotationCommand>()
     private val scaleCommands = mutableListOf<ScaleCommand>()
+
+    fun push(command: ImportAssetCommand) {
+        importAssetCommands += command
+    }
 
     fun push(command: TranslationCommand) {
         translationCommands += command
@@ -25,22 +31,22 @@ class CommandQueue {
         scaleCommands += command
     }
 
-    fun flushTranslations(): List<TranslationCommand> {
-        val result = translationCommands.toList()
-        translationCommands.clear()
-        return result
-    }
+    fun flushImports() = flushCommands(importAssetCommands)
 
-    fun flushRotations(): List<RotationCommand> {
-        val result = rotationCommands.toList()
-        rotationCommands.clear()
-        return result
-    }
+    fun flushTranslations() = flushCommands(translationCommands)
 
-    fun flushScales(): List<ScaleCommand> {
-        val result = scaleCommands.toList()
-        scaleCommands.clear()
-        return result
+    fun flushRotations() = flushCommands(rotationCommands)
+
+    fun flushScales() = flushCommands(scaleCommands)
+
+    private companion object {
+
+        fun <C> flushCommands(commands: MutableList<C>): List<C> {
+            val result = commands.toList()
+            commands.clear()
+            return result
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@ package be.encelade.viewer.menus
 
 import be.encelade.viewer.managers.AssetNodeManager
 import be.encelade.viewer.managers.CommandQueue
+import be.encelade.viewer.managers.commands.ImportAssetCommand
 import be.encelade.viewer.managers.commands.RotationCommand
 import be.encelade.viewer.managers.commands.ScaleCommand
 import be.encelade.viewer.managers.commands.TranslationCommand
@@ -156,8 +157,10 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                val sceneNode = assetNodeManager.importAsset(file)
-                loadInGui(sceneNode)
+                commandQueue.push(ImportAssetCommand(file) { loadInGui(it) })
+
+//                val sceneNode = assetNodeManager.importAsset(file)
+//                loadInGui(sceneNode)
             }
         }
 

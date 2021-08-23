@@ -28,6 +28,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
     private lateinit var cameraManager: CameraManager
     private lateinit var mouseInputManager: MouseInputManager
+    private lateinit var assetNodeManager: AssetNodeManager
     private lateinit var assetMenu: AssetMenu
 
     override fun simpleInitApp() {
@@ -47,7 +48,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         val propertiesFile = PropertiesFile("preferences.properties")
 
         // load menus and managers
-        val assetNodeManager = AssetNodeManager(this)
+        assetNodeManager = AssetNodeManager(this)
         assetMenu = AssetMenu(propertiesFile, commandQueue, assetNodeManager)
 
         // input
@@ -60,6 +61,11 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
+
+        commandQueue.flushImports().forEach { command ->
+            val sceneNode = assetNodeManager.importAsset(command.file)
+            command.callback(sceneNode)
+        }
 
         commandQueue.flushTranslations().forEach { command ->
             rootNode.getChild(command.id)?.localTranslation = command.translation
