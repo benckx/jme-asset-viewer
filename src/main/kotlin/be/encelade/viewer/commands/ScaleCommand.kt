@@ -1,4 +1,4 @@
-package be.encelade.viewer.managers.commands
+package be.encelade.viewer.commands
 
 import com.jme3.math.Vector3f
 

@@ -11,7 +11,7 @@ import com.jme3.scene.Node
 import com.jme3.scene.debug.Grid
 import com.jme3.scene.shape.Box
 
-class DecorNode : Node("MY_SCENE") {
+class DecorNode : Node("DECOR") {
 
     init {
         attachChildren(makeFloor(), makeGrid())

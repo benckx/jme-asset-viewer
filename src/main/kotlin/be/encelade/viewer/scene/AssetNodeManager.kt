@@ -1,7 +1,5 @@
-package be.encelade.viewer.managers
+package be.encelade.viewer.scene
 
-import be.encelade.viewer.scene.AssetNode
-import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import com.github.guepardoapps.kulid.ULID
 import com.jme3.app.SimpleApplication
@@ -60,7 +58,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         deleteById(assetNode.id)
     }
 
-    private fun deleteById(id: String) {
+    fun deleteById(id: String) {
         assetNodes
                 .find { it.id == id }
                 ?.let { assetNode ->

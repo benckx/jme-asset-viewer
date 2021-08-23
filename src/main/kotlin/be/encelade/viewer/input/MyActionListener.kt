@@ -1,7 +1,7 @@
 package be.encelade.viewer.input
 
-import be.encelade.viewer.managers.AssetNodeManager
 import be.encelade.viewer.menus.AssetMenu
+import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.app.SimpleApplication

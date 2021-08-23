@@ -1,11 +1,6 @@
 package be.encelade.viewer.menus
 
-import be.encelade.viewer.managers.AssetNodeManager
-import be.encelade.viewer.managers.CommandQueue
-import be.encelade.viewer.managers.commands.ImportAssetCommand
-import be.encelade.viewer.managers.commands.RotationCommand
-import be.encelade.viewer.managers.commands.ScaleCommand
-import be.encelade.viewer.managers.commands.TranslationCommand
+import be.encelade.viewer.commands.*
 import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
@@ -25,10 +20,7 @@ import javax.swing.JFileChooser.APPROVE_OPTION
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-// TODO: remove assetNodeManager -> manage all operations via the queue
-class AssetMenu(private val propertiesFile: PropertiesFile,
-                private val commandQueue: CommandQueue,
-                private val assetNodeManager: AssetNodeManager) : JFrame(), LazyLogging {
+class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQueue: CommandQueue) : JFrame(), LazyLogging {
 
     private var lastFolder: String? = null
     private var selectedAssetNode: AssetNode? = null
@@ -157,17 +149,13 @@ class AssetMenu(private val propertiesFile: PropertiesFile,
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                commandQueue.push(ImportAssetCommand(file) { loadInGui(it) })
-
-//                val sceneNode = assetNodeManager.importAsset(file)
-//                loadInGui(sceneNode)
+                commandQueue.push(ImportAssetCommand(file) { sceneNode -> loadInGui(sceneNode) })
             }
         }
 
         deleteButton.addActionListener {
             selectedAssetNode?.let { assetNode ->
-                assetNodeManager.delete(assetNode)
-                unFocusAll()
+                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) { unFocusAll() })
             }
         }
 

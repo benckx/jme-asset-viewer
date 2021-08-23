@@ -1,4 +1,4 @@
-package be.encelade.viewer.managers
+package be.encelade.viewer.input
 
 import com.jme3.app.SimpleApplication
 import com.jme3.collision.CollisionResults

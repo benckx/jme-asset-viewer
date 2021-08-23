@@ -3,12 +3,12 @@ package be.encelade.viewer
 import be.encelade.chimp.material.MaterialDefinitions
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
+import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.input.MouseInputManager
 import be.encelade.viewer.input.MyActionListener
 import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
-import be.encelade.viewer.managers.AssetNodeManager
-import be.encelade.viewer.managers.CommandQueue
 import be.encelade.viewer.menus.AssetMenu
+import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.DecorNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
@@ -49,7 +49,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         // load menus and managers
         assetNodeManager = AssetNodeManager(this)
-        assetMenu = AssetMenu(propertiesFile, commandQueue, assetNodeManager)
+        assetMenu = AssetMenu(propertiesFile, commandQueue)
 
         // input
         mouseInputManager = MouseInputManager(this)
@@ -65,6 +65,10 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         commandQueue.flushImports().forEach { command ->
             val sceneNode = assetNodeManager.importAsset(command.file)
             command.callback(sceneNode)
+        }
+
+        commandQueue.flushDeletes().forEach { command ->
+            assetNodeManager.deleteById(command.id)
         }
 
         commandQueue.flushTranslations().forEach { command ->
