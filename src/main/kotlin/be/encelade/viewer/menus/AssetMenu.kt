@@ -17,6 +17,7 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
 
     private var lastFolder: String? = null
     private var selectedAssetNode: AssetNode? = null
+    private var assetUpdateEnabled = false
 
     private val xPosField = JTextField("0.0")
     private val yPosField = JTextField("0.0")
@@ -85,11 +86,13 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
     }
 
     private fun updatePosition() {
-        selectedAssetNode?.let { assetNode ->
-            if (positionFields.all { isFloat(it) }) {
-                val position = Vector3f(xPosField.text.toFloat(), yPosField.text.toFloat(), zPosField.text.toFloat())
-                logger.debug("new position: $position")
-                assetNode.node.localTranslation = position
+        if (assetUpdateEnabled) {
+            selectedAssetNode?.let { assetNode ->
+                if (positionFields.all { isFloat(it) }) {
+                    val position = Vector3f(xPosField.text.toFloat(), yPosField.text.toFloat(), zPosField.text.toFloat())
+                    logger.debug("new position: $position")
+                    assetNode.node.localTranslation = position
+                }
             }
         }
     }
@@ -97,14 +100,15 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
     fun loadInGui(assetNode: AssetNode) {
         this.selectedAssetNode = assetNode
 
-        positionFields.forEach { it.isEnabled = true }
-
         title = assetNode.fileName
 
         val translation = assetNode.localTranslation()
         xPosField.text = translation.x.toString()
         yPosField.text = translation.y.toString()
         zPosField.text = translation.z.toString()
+
+        positionFields.forEach { field -> field.isEnabled = true }
+        assetUpdateEnabled = true
     }
 
     fun unloadAll() {
@@ -112,6 +116,7 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
         positionFields.forEach { it.isEnabled = false }
         positionFields.forEach { it.text = "0.0" }
         title = defaultTitle
+        assetUpdateEnabled = false
     }
 
     private companion object {

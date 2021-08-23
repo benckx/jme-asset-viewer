@@ -12,19 +12,21 @@ class MyActionListener(private val mouseInputManager: MouseInputManager,
                        private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
 
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
-        when (name) {
-            MOUSE_CLICK -> {
-                val assetNode = findAssetNode()
-                if (assetNode != null) {
-                    assetMenu.loadInGui(assetNode)
-                } else {
-                    assetMenu.unloadAll()
+        if (!isPressed) {
+            when (name) {
+                MOUSE_CLICK -> {
+                    val assetNode = findClickedAssetNode()
+                    if (assetNode != null) {
+                        assetMenu.loadInGui(assetNode)
+                    } else {
+                        assetMenu.unloadAll()
+                    }
                 }
             }
         }
     }
 
-    private fun findAssetNode(): AssetNode? {
+    private fun findClickedAssetNode(): AssetNode? {
         val collisionIds = mouseInputManager.collisionIds()
         return if (collisionIds.isNotEmpty()) {
             sceneManager.findById(collisionIds.first())
