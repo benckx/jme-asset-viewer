@@ -41,7 +41,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         addLighting()
 
         // properties
-        val propertiesFile = PropertiesFile("preferences.ini")
+        val propertiesFile = PropertiesFile("preferences.properties")
 
         // load menus and managers
         val sceneManager = SceneManager(this)
