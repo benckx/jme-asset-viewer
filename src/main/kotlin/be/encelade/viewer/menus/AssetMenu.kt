@@ -2,28 +2,35 @@ package be.encelade.viewer.menus
 
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.scene.AssetNode
+import be.encelade.viewer.utils.LazyLogging
+import com.jme3.math.Vector3f
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
 import java.io.File
 import javax.swing.*
 import javax.swing.JFileChooser.APPROVE_OPTION
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
-class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
+class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging {
 
     private var lastFolder: String? = null
+    private var selectedAssetNode: AssetNode? = null
 
-    private val xPosField = JTextField("0")
-    private val yPosField = JTextField("0")
-    private val zPosField = JTextField("0")
+    private val xPosField = JTextField("0.0")
+    private val yPosField = JTextField("0.0")
+    private val zPosField = JTextField("0.0")
+
+    private val positionFields = listOf(xPosField, yPosField, zPosField)
 
     init {
-        title = "Asset"
+        title = defaultTitle
         setBounds(300, 90, 200, 150)
         defaultCloseOperation = EXIT_ON_CLOSE
-        isResizable = false
+        isResizable = true
 
-        val font = Font("Arial", Font.PLAIN, 20)
+        val font = Font("Arial", Font.PLAIN, 19)
 
         val northPanel = JPanel()
         northPanel.layout = GridLayout(0, 1)
@@ -45,6 +52,8 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
         val yPosLabel = JLabel("y:")
         val zPosLabel = JLabel("z:")
 
+        positionFields.forEach { it.isEnabled = false }
+
         southPanel.add(xPosLabel)
         southPanel.add(xPosField)
         southPanel.add(yPosLabel)
@@ -65,15 +74,63 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame() {
                 sceneManager.importAsset(file)
             }
         }
+
+        positionFields.forEach { field ->
+            field.document.addDocumentListener(object : DocumentListener {
+                override fun insertUpdate(e: DocumentEvent?) = updatePosition()
+                override fun removeUpdate(e: DocumentEvent?) = updatePosition()
+                override fun changedUpdate(e: DocumentEvent?) = updatePosition()
+            })
+        }
+    }
+
+    private fun updatePosition() {
+        selectedAssetNode?.let { assetNode ->
+            if (positionFields.all { isFloat(it) }) {
+                val position = Vector3f(xPosField.text.toFloat(), yPosField.text.toFloat(), zPosField.text.toFloat())
+                logger.debug("new position: $position")
+                assetNode.node.localTranslation = position
+            }
+        }
     }
 
     fun loadInGui(assetNode: AssetNode) {
+        this.selectedAssetNode = assetNode
+
+        positionFields.forEach { it.isEnabled = true }
+
         title = assetNode.fileName
 
-        val localTranslation = assetNode.worldTranslation()
-        xPosField.text = localTranslation.x.toString()
-        yPosField.text = localTranslation.y.toString()
-        zPosField.text = localTranslation.z.toString()
+        val translation = assetNode.localTranslation()
+        xPosField.text = translation.x.toString()
+        yPosField.text = translation.y.toString()
+        zPosField.text = translation.z.toString()
+    }
+
+    fun unloadAll() {
+        this.selectedAssetNode = null
+        positionFields.forEach { it.isEnabled = false }
+        positionFields.forEach { it.text = "0.0" }
+        title = defaultTitle
+    }
+
+    private companion object {
+
+        const val defaultTitle = "Asset"
+
+        fun isFloat(value: String): Boolean {
+            return try {
+                value.toFloat()
+                true
+            } catch (e: NumberFormatException) {
+                false
+            }
+        }
+
+        fun isFloat(field: JTextField): Boolean {
+            return isFloat(field.text)
+        }
+
     }
 
 }

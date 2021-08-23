@@ -12,8 +12,8 @@ data class AssetNode(val id: String,
         return node.children.first()
     }
 
-    fun worldTranslation(): Vector3f {
-        return spatial().worldTranslation
+    fun localTranslation(): Vector3f {
+        return node.localTranslation
     }
 
 }

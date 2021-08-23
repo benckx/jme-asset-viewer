@@ -3,6 +3,7 @@ package be.encelade.viewer.input
 import be.encelade.viewer.managers.MouseInputManager
 import be.encelade.viewer.managers.SceneManager
 import be.encelade.viewer.menus.AssetMenu
+import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.input.controls.ActionListener
 
@@ -13,14 +14,22 @@ class MyActionListener(private val mouseInputManager: MouseInputManager,
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
         when (name) {
             MOUSE_CLICK -> {
-                val collisionIds = mouseInputManager.collisionIds()
-                if (collisionIds.isNotEmpty()) {
-                    logger.info("to show: ${collisionIds.first()}")
-                    sceneManager.findById(collisionIds.first())?.let { assetNode ->
-                        assetMenu.loadInGui(assetNode)
-                    }
+                val assetNode = findAssetNode()
+                if (assetNode != null) {
+                    assetMenu.loadInGui(assetNode)
+                } else {
+                    assetMenu.unloadAll()
                 }
             }
+        }
+    }
+
+    private fun findAssetNode(): AssetNode? {
+        val collisionIds = mouseInputManager.collisionIds()
+        return if (collisionIds.isNotEmpty()) {
+            sceneManager.findById(collisionIds.first())
+        } else {
+            null
         }
     }
 

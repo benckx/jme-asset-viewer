@@ -5,6 +5,7 @@ import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.chimp.utils.NodeHelperUtils.attachChildren
 import com.jme3.math.ColorRGBA.Blue
 import com.jme3.math.FastMath.HALF_PI
+import com.jme3.renderer.queue.RenderQueue
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
 import com.jme3.scene.debug.Grid
@@ -27,6 +28,7 @@ class SceneNode : Node("MY_SCENE") {
 
             val floor = Geometry("FLOOR", Box(sizeX / 2f, sizeY / 2f, 0f))
             floor.material = floorMat
+            floor.shadowMode = RenderQueue.ShadowMode.Receive
 
             return floor
         }
