@@ -19,6 +19,3 @@ Template (i.e. cookie cutter project) for my Kotlin / Gradle projects.
 ```
  ./gradlew dependencyUpdates --refresh-dependencies
 ```
-
-## Duplicate
-https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/duplicating-a-repository
