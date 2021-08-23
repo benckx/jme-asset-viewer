@@ -106,6 +106,8 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
                 override fun removeUpdate(e: DocumentEvent?) = updatePosition()
                 override fun changedUpdate(e: DocumentEvent?) = updatePosition()
             })
+
+            updateOnMouseWheel(field, .1f)
         }
 
         rotationFields.forEach { field ->
@@ -114,6 +116,8 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
                 override fun removeUpdate(e: DocumentEvent?) = updateRotation()
                 override fun changedUpdate(e: DocumentEvent?) = updateRotation()
             })
+
+            updateOnMouseWheel(field, 1f)
         }
     }
 
@@ -133,6 +137,17 @@ class AssetMenu(private val sceneManager: SceneManager) : JFrame(), LazyLogging 
                 if (allFloats(rotationFields)) {
                     assetNode.node.localRotation = toQuaternion(rotationFields)
                 }
+            }
+        }
+    }
+
+    private fun updateOnMouseWheel(field: JTextField, amount: Float) {
+        field.addMouseWheelListener { e ->
+            if (isFloat(field)) {
+                val value = field.text.toFloat()
+                val actualAmount = e.wheelRotation * amount
+                val newValue = value + actualAmount
+                field.text = newValue.toString()
             }
         }
     }
