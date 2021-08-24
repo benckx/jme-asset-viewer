@@ -105,6 +105,11 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         }
     }
 
+    fun reDrawBoundingBox(node: Node) {
+        deleteBoundingBox()
+        drawBoundingBox(node)
+    }
+
     fun deleteBoundingBox() {
         rootNode.detachChildNamed(SELECTED_ASSET)
     }

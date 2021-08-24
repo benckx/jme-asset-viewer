@@ -19,6 +19,7 @@ import com.jme3.light.AmbientLight
 import com.jme3.light.DirectionalLight
 import com.jme3.math.ColorRGBA.White
 import com.jme3.math.Vector3f
+import com.jme3.scene.Node
 import com.jme3.shadow.DirectionalLightShadowRenderer
 import kotlin.system.exitProcess
 
@@ -82,18 +83,24 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         }
 
         commandQueue.flushTranslationCommands().forEach { command ->
-            rootNode.getChild(command.id)?.localTranslation = command.translation
-            rootNode.getChild(SELECTED_ASSET)?.localTranslation = command.translation
+            rootNode.getChild(command.id)?.let { spatial ->
+                spatial.localTranslation = command.translation
+                assetNodeManager.reDrawBoundingBox(spatial as Node)
+            }
         }
 
         commandQueue.flushRotationCommands().forEach { command ->
-            rootNode.getChild(command.id)?.localRotation = command.rotation
-            rootNode.getChild(SELECTED_ASSET)?.localRotation = command.rotation
+            rootNode.getChild(command.id)?.let { spatial ->
+                spatial.localRotation = command.rotation
+                assetNodeManager.reDrawBoundingBox(spatial as Node)
+            }
         }
 
         commandQueue.flushScaleCommands().forEach { command ->
-            rootNode.getChild(command.id)?.localScale = command.toVector3f()
-            rootNode.getChild(SELECTED_ASSET)?.localScale = command.toVector3f()
+            rootNode.getChild(command.id)?.let { spatial ->
+                spatial.localScale = command.toVector3f()
+                assetNodeManager.reDrawBoundingBox(spatial as Node)
+            }
         }
     }
 
