@@ -4,6 +4,7 @@ import com.jme3.bounding.BoundingVolume
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
 
+// TODO: move to chimps-utils?
 object GeometryUtils {
 
     fun extractBoundingVolume(node: Node): BoundingVolume {
