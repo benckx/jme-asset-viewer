@@ -83,14 +83,17 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         commandQueue.flushTranslationCommands().forEach { command ->
             rootNode.getChild(command.id)?.localTranslation = command.translation
+            rootNode.getChild(SELECTED_ASSET)?.localTranslation = command.translation
         }
 
         commandQueue.flushRotationCommands().forEach { command ->
             rootNode.getChild(command.id)?.localRotation = command.rotation
+            rootNode.getChild(SELECTED_ASSET)?.localRotation = command.rotation
         }
 
         commandQueue.flushScaleCommands().forEach { command ->
             rootNode.getChild(command.id)?.localScale = command.toVector3f()
+            rootNode.getChild(SELECTED_ASSET)?.localScale = command.toVector3f()
         }
     }
 
@@ -119,6 +122,12 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         val al = AmbientLight()
         al.color = White.mult(0.12f)
         rootNode.addLight(al)
+    }
+
+    companion object {
+
+        const val SELECTED_ASSET = "SELECTED_ASSET"
+
     }
 
 }

@@ -19,8 +19,10 @@ class MyActionListener(private val rootNode: Node,
                     val sceneNode = findSceneNode()
                     if (sceneNode != null) {
                         assetMenu.showInForm(sceneNode)
+                        assetNodeManager.drawBoundingBox(sceneNode)
                     } else {
                         assetMenu.unFocusAll()
+                        assetNodeManager.deleteBoundingBox()
                     }
                 }
             }
