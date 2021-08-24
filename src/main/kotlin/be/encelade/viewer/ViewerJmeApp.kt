@@ -29,7 +29,6 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     private lateinit var cameraManager: CameraManager
     private lateinit var mouseInputManager: MouseInputManager
     private lateinit var assetNodeManager: AssetNodeManager
-    private lateinit var assetMenu: AssetMenu
 
     override fun simpleInitApp() {
         // init chimp-utils API for materials
@@ -49,11 +48,11 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         // load menus and managers
         assetNodeManager = AssetNodeManager(this)
-        assetMenu = AssetMenu(propertiesFile, commandQueue)
+        val assetMenu = AssetMenu(propertiesFile, commandQueue)
 
         // input
         mouseInputManager = MouseInputManager(this)
-        val actionListener = MyActionListener(this, mouseInputManager, assetNodeManager, assetMenu)
+        val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, assetMenu)
         inputManager.addListener(actionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
@@ -61,7 +60,10 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
+        executeCommands()
+    }
 
+    private fun executeCommands() {
         commandQueue.flushImportCommands().forEach { command ->
             val sceneNode = assetNodeManager.importAsset(command.file)
             command.callback(sceneNode)
@@ -95,7 +97,8 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     override fun destroy() {
         super.destroy()
 
-        // exit GUI too if JME windows is stopped
+        // exit upon JME windows stopping
+        // otherwise it keeps running with the only GUI
         exitProcess(0)
     }
 

@@ -4,16 +4,13 @@ import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
-import com.jme3.app.SimpleApplication
 import com.jme3.input.controls.ActionListener
 import com.jme3.scene.Node
 
-class MyActionListener(app: SimpleApplication,
+class MyActionListener(private val rootNode: Node,
                        private val mouseInputManager: MouseInputManager,
                        private val assetNodeManager: AssetNodeManager,
                        private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
-
-    private val rootNode by lazy { app.rootNode }
 
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
         if (!isPressed) {
