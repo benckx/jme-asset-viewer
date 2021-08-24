@@ -10,6 +10,9 @@ import com.jme3.scene.Node
 import com.jme3.scene.Spatial
 import java.io.File
 
+/**
+ * Manage the list of imported assets in the scene (store as [AssetNode])
+ */
 class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
 
     private val assetNodes = mutableListOf<AssetNode>()
@@ -18,7 +21,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
     private val rootNode by lazy { app.rootNode }
 
     fun importAsset(file: File): SceneNode {
-        val spatial = importSpatial(file)
+        val spatial = loadAssetSpatial(file)
         val node = Node(spatial.name)
         node.attachChild(spatial)
         node.move(0f, 0f, 1f)
@@ -30,7 +33,10 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         return SceneNode(assetNode, node)
     }
 
-    private fun importSpatial(file: File): Spatial {
+    /**
+     * Add shadows and id
+     */
+    private fun loadAssetSpatial(file: File): Spatial {
         val name = ULID.random()
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
@@ -58,22 +64,20 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         return assetNodes.find { it.id == id }
     }
 
-    fun deleteById(id: String) {
-        assetNodes
-                .find { it.id == id }
-                ?.let { assetNode ->
-                    rootNode.detachChildNamed(assetNode.id)
-                    assetNodes.remove(assetNode)
-                }
+    fun delete(id: String) {
+        findById(id)?.let { assetNode ->
+            rootNode.detachChildNamed(assetNode.id)
+            assetNodes.remove(assetNode)
+        }
     }
 
-    fun cloneById(id: String): SceneNode? {
-        val sourceAssetNode = assetNodes.find { it.id == id }
+    fun clone(id: String): SceneNode? {
+        val sourceAssetNode = findById(id)
         val sourceNode = rootNode.getChild(id)
 
         if (sourceAssetNode != null && sourceNode != null) {
             val file = File(sourceAssetNode.file.name)
-            val spatial = importSpatial(file)
+            val spatial = loadAssetSpatial(file)
 
             val assetNode = AssetNode(spatial.name, file)
             val node = Node(spatial.name)

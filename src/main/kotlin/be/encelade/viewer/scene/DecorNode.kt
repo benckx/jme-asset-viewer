@@ -11,6 +11,9 @@ import com.jme3.scene.Node
 import com.jme3.scene.debug.Grid
 import com.jme3.scene.shape.Box
 
+/**
+ * Singleton [Node] with a floor and a grid.
+ */
 class DecorNode : Node("DECOR") {
 
     init {

@@ -62,32 +62,32 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
 
-        commandQueue.flushImports().forEach { command ->
+        commandQueue.flushImportCommands().forEach { command ->
             val sceneNode = assetNodeManager.importAsset(command.file)
             command.callback(sceneNode)
         }
 
-        commandQueue.flushDeletes().forEach { command ->
-            assetNodeManager.deleteById(command.id)
+        commandQueue.flushDeleteCommands().forEach { command ->
+            assetNodeManager.delete(command.id)
             command.callback()
         }
 
-        commandQueue.flushClones().forEach { command ->
-            assetNodeManager.cloneById(command.id)?.let { sceneNode ->
-                sceneNode.node.move(0f, 1f, 0f)
+        commandQueue.flushCloneCommands().forEach { command ->
+            assetNodeManager.clone(command.id)?.let { sceneNode ->
+                sceneNode.node.move(1f, 1f, 0f)
                 command.callback(sceneNode)
             }
         }
 
-        commandQueue.flushTranslations().forEach { command ->
+        commandQueue.flushTranslationCommands().forEach { command ->
             rootNode.getChild(command.id)?.localTranslation = command.translation
         }
 
-        commandQueue.flushRotations().forEach { command ->
+        commandQueue.flushRotationCommands().forEach { command ->
             rootNode.getChild(command.id)?.localRotation = command.rotation
         }
 
-        commandQueue.flushScales().forEach { command ->
+        commandQueue.flushScaleCommands().forEach { command ->
             rootNode.getChild(command.id)?.localScale = command.toVector3f()
         }
     }

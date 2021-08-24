@@ -5,7 +5,8 @@ import java.io.File
 /**
  * Reference to the imported asset in the scene.
  *
- * @param id is used to identified which asset has been selected by clicking in the scene
+ * @param id is used to identified which asset has been selected by clicking in the scene,
+ *        it will be used as the name of all [com.jme3.scene.Spatial] of the import asset.
  */
 data class AssetNode(val id: String, val file: File) {
 

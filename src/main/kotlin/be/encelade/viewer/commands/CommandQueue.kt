@@ -38,24 +38,28 @@ class CommandQueue {
         scaleCommands += command
     }
 
-    fun flushImports() = flushCommands(importAssetCommands)
+    fun flushImportCommands() = flushCommands(importAssetCommands)
 
-    fun flushDeletes() = flushCommands(deleteAssetNodeCommands)
+    fun flushDeleteCommands() = flushCommands(deleteAssetNodeCommands)
 
-    fun flushClones() = flushCommands(cloneCommands)
+    fun flushCloneCommands() = flushCommands(cloneCommands)
 
-    fun flushTranslations() = flushCommands(translationCommands)
+    fun flushTranslationCommands() = flushCommands(translationCommands)
 
-    fun flushRotations() = flushCommands(rotationCommands)
+    fun flushRotationCommands() = flushCommands(rotationCommands)
 
-    fun flushScales() = flushCommands(scaleCommands)
+    fun flushScaleCommands() = flushCommands(scaleCommands)
 
     private companion object {
 
         fun <C> flushCommands(commands: MutableList<C>): List<C> {
-            val result = commands.toList()
-            commands.clear()
-            return result
+            return if (commands.isNotEmpty()) {
+                val result = commands.toList()
+                commands.clear()
+                result
+            } else {
+                listOf()
+            }
         }
 
     }
