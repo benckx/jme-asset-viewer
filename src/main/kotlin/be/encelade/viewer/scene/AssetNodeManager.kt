@@ -105,6 +105,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         }
     }
 
+    // TODO: move to its own little manager?
     fun reDrawBoundingBox(node: Node) {
         deleteBoundingBox()
         drawBoundingBox(node)

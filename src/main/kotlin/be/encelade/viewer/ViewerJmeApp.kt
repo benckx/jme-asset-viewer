@@ -72,6 +72,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
         commandQueue.flushDeleteCommands().forEach { command ->
             assetNodeManager.delete(command.id)
+            assetNodeManager.deleteBoundingBox()
             command.callback()
         }
 
