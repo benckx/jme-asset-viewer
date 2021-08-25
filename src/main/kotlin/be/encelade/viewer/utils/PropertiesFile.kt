@@ -33,6 +33,7 @@ class PropertiesFile(fileName: String) : LazyLogging {
 
     companion object {
 
+        // TODO: move to enum
         const val DEFAULT_FOLDER_KEY = "DEFAULT_FOLDER"
 
     }

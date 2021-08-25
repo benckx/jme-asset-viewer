@@ -20,7 +20,7 @@ import javax.swing.event.DocumentListener
 
 internal class AssetCoordinatesPanel(guiFont: Font,
                                      private val commandQueue: CommandQueue,
-                                     private val parent: AssetMenu) : JPanel() {
+                                     private val context: GuiContext) : JPanel() {
 
     private val xPosField = JTextField("0.0")
     private val yPosField = JTextField("0.0")
@@ -107,7 +107,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     }
 
     private fun updatePosition() {
-        parent.selectedAssetNode()?.let { assetNode ->
+        context.selectedAssetNode?.let { assetNode ->
             if (allFloats(positionFields)) {
                 commandQueue.push(TranslationCommand(assetNode.id, toVector3f(positionFields)))
             }
@@ -115,7 +115,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     }
 
     private fun updateRotation() {
-        parent.selectedAssetNode()?.let { assetNode ->
+        context.selectedAssetNode?.let { assetNode ->
             if (allFloats(rotationFields)) {
                 commandQueue.push(RotationCommand(assetNode.id, toQuaternion(rotationFields)))
             }
@@ -124,7 +124,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     }
 
     private fun updateScale() {
-        parent.selectedAssetNode()?.let { assetNode ->
+        context.selectedAssetNode?.let { assetNode ->
             if (allFloats(scaleFields)) {
                 commandQueue.push(ScaleCommand(assetNode.id, scaleField.text.toFloat()))
             }

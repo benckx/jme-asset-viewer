@@ -1,8 +1,8 @@
 package be.encelade.viewer.commands
 
 /**
- * Ensure the Scene is modified only by the JME thread, so the GUI sends commands that the JME thread will execute,
- * instead of the GUI directly changing the scene.
+ * Send commands from the GUI to the JME scene; ensuring the Scene is modified only by the JME thread.
+ * The commands will be picked up the [com.jme3.app.SimpleApplication] during simpleUpdate
  */
 class CommandQueue {
 

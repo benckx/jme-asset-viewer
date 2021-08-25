@@ -14,16 +14,13 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
 
     private val guiFont = Font("Arial", Font.PLAIN, 17)
 
-    // TODO: replace parent by "context"?
-    private var selectedAssetNode: AssetNode? = null
-    private var assetUpdateEnabled = false
-
-    private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, propertiesFile, this)
-    private val coordinatesPanel = AssetCoordinatesPanel(guiFont, commandQueue, this)
+    private val context = GuiContext(propertiesFile)
+    private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, context, this)
+    private val coordinatesPanel = AssetCoordinatesPanel(guiFont, commandQueue, context)
 
     init {
         title = defaultTitle
-        setBounds(300, 90, 300, 500)
+        setBounds(300, 90, 340, 500)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
 
@@ -34,29 +31,21 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
         isVisible = true
     }
 
-    fun selectedAssetNode(): AssetNode? {
-        return if (assetUpdateEnabled) {
-            selectedAssetNode
-        } else {
-            null
-        }
-    }
-
     fun show(sceneNode: SceneNode) {
         show(sceneNode.assetNode, sceneNode.node)
     }
 
     private fun show(assetNode: AssetNode, node: Node) {
-        this.selectedAssetNode = assetNode
+        context.selectedAssetNode = assetNode
         this.title = assetNode.fileName
         buttonPanel.enableFocus()
         coordinatesPanel.show(node)
-        assetUpdateEnabled = true
+        context.assetUpdateEnabled = true
     }
 
     fun disableFocus() {
-        this.selectedAssetNode = null
-        this.assetUpdateEnabled = false
+        context.selectedAssetNode = null
+        context.assetUpdateEnabled = false
         buttonPanel.disableFocus()
         coordinatesPanel.disableFocus()
         title = defaultTitle
