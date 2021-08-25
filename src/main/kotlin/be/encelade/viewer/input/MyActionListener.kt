@@ -21,7 +21,7 @@ class MyActionListener(private val rootNode: Node,
                         assetMenu.showInForm(sceneNode)
                         assetNodeManager.drawBoundingBox(sceneNode)
                     } else {
-                        assetMenu.unFocusAll()
+                        assetMenu.disableFocus()
                         assetNodeManager.deleteBoundingBox()
                     }
                 }

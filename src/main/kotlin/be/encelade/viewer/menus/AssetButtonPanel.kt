@@ -12,10 +12,10 @@ import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JPanel
 
-class AssetButtonPanel(font: Font,
-                       commandQueue: CommandQueue,
-                       propertiesFile: PropertiesFile,
-                       parent: AssetMenu) : JPanel() {
+internal class AssetButtonPanel(font: Font,
+                                commandQueue: CommandQueue,
+                                propertiesFile: PropertiesFile,
+                                parent: AssetMenu) : JPanel() {
 
     private var lastFolder: String? = null
 
@@ -54,7 +54,7 @@ class AssetButtonPanel(font: Font,
 
         deleteButton.addActionListener {
             parent.selectedAssetNode()?.let { assetNode ->
-                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) { parent.unFocusAll() })
+                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) { parent.disableFocus() })
             }
         }
 
