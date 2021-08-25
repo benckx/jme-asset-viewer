@@ -1,11 +1,13 @@
 package be.encelade.viewer.menus
 
-import be.encelade.viewer.commands.*
+import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.commands.RotationCommand
+import be.encelade.viewer.commands.ScaleCommand
+import be.encelade.viewer.commands.TranslationCommand
 import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
-import be.encelade.viewer.utils.PropertiesFile.Companion.DEFAULT_FOLDER_KEY
 import com.jme3.math.FastMath.DEG_TO_RAD
 import com.jme3.math.FastMath.RAD_TO_DEG
 import com.jme3.math.Quaternion
@@ -14,21 +16,19 @@ import com.jme3.scene.Node
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.GridLayout
-import java.io.File
-import javax.swing.*
-import javax.swing.JFileChooser.APPROVE_OPTION
+import javax.swing.JFrame
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQueue: CommandQueue) : JFrame(), LazyLogging {
+class AssetMenu(propertiesFile: PropertiesFile, private val commandQueue: CommandQueue) : JFrame(), LazyLogging {
 
-    private var lastFolder: String? = null
+    private val guiFont = Font("Arial", Font.PLAIN, 16)
+
     private var selectedAssetNode: AssetNode? = null
     private var assetUpdateEnabled = false
-
-    private val importButton = JButton("Import")
-    private val cloneButton = JButton("Clone")
-    private val deleteButton = JButton("Delete")
 
     private val xPosField = JTextField("0.0")
     private val yPosField = JTextField("0.0")
@@ -46,33 +46,20 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
 
     private val allFields = positionFields + rotationFields + scaleFields
 
+    private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, propertiesFile, this)
+
     init {
         title = defaultTitle
-        setBounds(300, 90, 200, 400)
+        setBounds(300, 90, 250, 500)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
-
-        val font = Font("Arial", Font.PLAIN, 19)
-
-        val northPanel = JPanel()
-        northPanel.layout = GridLayout(0, 1)
 
         val southPanel = JPanel()
         southPanel.layout = GridLayout(0, 2)
 
-        val panel = JPanel()
-        panel.layout = BorderLayout()
-        panel.add(northPanel, BorderLayout.NORTH)
-        panel.add(southPanel, BorderLayout.SOUTH)
-        add(panel)
-
-        northPanel.add(importButton)
-        northPanel.add(deleteButton)
-        northPanel.add(cloneButton)
-        northPanel.components.forEach { it.font = font }
-
-        deleteButton.isEnabled = false
-        cloneButton.isEnabled = false
+        layout = BorderLayout()
+        add(buttonPanel, BorderLayout.NORTH)
+        add(southPanel, BorderLayout.SOUTH)
 
         val xPosLabel = JLabel("position x:")
         val yPosLabel = JLabel("position y:")
@@ -106,7 +93,7 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
         southPanel.add(scaleLabel)
         southPanel.add(scaleField)
 
-        southPanel.components.forEach { it.font = font }
+        southPanel.components.forEach { it.font = guiFont }
 
         isVisible = true
 
@@ -138,35 +125,6 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
             })
 
             updateOnMouseWheel(field, .05f)
-        }
-
-        importButton.addActionListener {
-            val fileChooser = JFileChooser()
-            lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
-            val returnValue = fileChooser.showOpenDialog(importButton)
-            if (returnValue == APPROVE_OPTION) {
-                val file = fileChooser.selectedFile
-                val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
-                lastFolder = containingFolder
-                propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, containingFolder)
-                commandQueue.push(ImportAssetCommand(file) { sceneNode -> showInForm(sceneNode) })
-            }
-        }
-
-        cloneButton.addActionListener {
-            selectedAssetNode?.let { assetNode ->
-                commandQueue.push(CloneCommand(assetNode.id) { sceneNode -> showInForm(sceneNode) })
-            }
-        }
-
-        deleteButton.addActionListener {
-            selectedAssetNode?.let { assetNode ->
-                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) { unFocusAll() })
-            }
-        }
-
-        propertiesFile.getProperty(DEFAULT_FOLDER_KEY)?.let { containingFolder ->
-            lastFolder = containingFolder
         }
     }
 
@@ -211,6 +169,10 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
         }
     }
 
+    fun selectedAssetNode(): AssetNode? {
+        return selectedAssetNode
+    }
+
     fun showInForm(sceneNode: SceneNode) {
         showInForm(sceneNode.assetNode, sceneNode.node)
     }
@@ -234,16 +196,14 @@ class AssetMenu(private val propertiesFile: PropertiesFile, private val commandQ
         scaleField.text = node.localScale.x.toString()
 
         allFields.forEach { field -> field.isEnabled = true }
-        deleteButton.isEnabled = true
-        cloneButton.isEnabled = true
+        buttonPanel.enableFocus()
         assetUpdateEnabled = true
     }
 
     fun unFocusAll() {
         this.selectedAssetNode = null
         assetUpdateEnabled = false
-        deleteButton.isEnabled = false
-        cloneButton.isEnabled = false
+        buttonPanel.disableFocus()
         allFields.forEach { it.isEnabled = false }
         positionFields.forEach { it.text = "0.0" }
         rotationFields.forEach { it.text = "0.0" }
