@@ -2,6 +2,7 @@ package be.encelade.viewer.input
 
 import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
+import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.input.controls.ActionListener
@@ -10,6 +11,7 @@ import com.jme3.scene.Node
 class MyActionListener(private val rootNode: Node,
                        private val mouseInputManager: MouseInputManager,
                        private val assetNodeManager: AssetNodeManager,
+                       private val boundingBoxManager: BoundingBoxManager,
                        private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
 
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
@@ -19,10 +21,10 @@ class MyActionListener(private val rootNode: Node,
                     val sceneNode = findSceneNode()
                     if (sceneNode != null) {
                         assetMenu.showInForm(sceneNode)
-                        assetNodeManager.drawBoundingBox(sceneNode)
+                        boundingBoxManager.drawBoundingBox(sceneNode)
                     } else {
                         assetMenu.disableFocus()
-                        assetNodeManager.deleteBoundingBox()
+                        boundingBoxManager.deleteBoundingBox()
                     }
                 }
             }

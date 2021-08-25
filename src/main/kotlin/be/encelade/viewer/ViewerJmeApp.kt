@@ -9,6 +9,7 @@ import be.encelade.viewer.input.MyActionListener
 import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
 import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
+import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.DecorNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
@@ -29,7 +30,9 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
     private lateinit var cameraManager: CameraManager
     private lateinit var mouseInputManager: MouseInputManager
+
     private lateinit var assetNodeManager: AssetNodeManager
+    private lateinit var boundingBoxManager: BoundingBoxManager
 
     override fun simpleInitApp() {
         // init chimp-utils API for materials
@@ -47,13 +50,16 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         // properties
         val propertiesFile = PropertiesFile("preferences.properties")
 
-        // load menus and managers
+        // init managers
         assetNodeManager = AssetNodeManager(this)
-        val assetMenu = AssetMenu(propertiesFile, commandQueue)
+        boundingBoxManager = BoundingBoxManager(rootNode)
 
-        // input
+        // input and GUI
+        val assetMenu = AssetMenu(propertiesFile, commandQueue)
         mouseInputManager = MouseInputManager(this)
-        val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, assetMenu)
+        val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
+
+        // mappings
         inputManager.addListener(actionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
@@ -67,12 +73,13 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     private fun executeCommands() {
         commandQueue.flushImportCommands().forEach { command ->
             val sceneNode = assetNodeManager.importAsset(command.file)
+            boundingBoxManager.drawBoundingBox(sceneNode)
             command.callback(sceneNode)
         }
 
         commandQueue.flushDeleteCommands().forEach { command ->
             assetNodeManager.delete(command.id)
-            assetNodeManager.deleteBoundingBox()
+            boundingBoxManager.deleteBoundingBox()
             command.callback()
         }
 
@@ -86,21 +93,21 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         commandQueue.flushTranslationCommands().forEach { command ->
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localTranslation = command.translation
-                assetNodeManager.reDrawBoundingBox(spatial as Node)
+                boundingBoxManager.reDrawBoundingBox(spatial as Node)
             }
         }
 
         commandQueue.flushRotationCommands().forEach { command ->
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localRotation = command.rotation
-                assetNodeManager.reDrawBoundingBox(spatial as Node)
+                boundingBoxManager.reDrawBoundingBox(spatial as Node)
             }
         }
 
         commandQueue.flushScaleCommands().forEach { command ->
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localScale = command.toVector3f()
-                assetNodeManager.reDrawBoundingBox(spatial as Node)
+                boundingBoxManager.reDrawBoundingBox(spatial as Node)
             }
         }
     }
@@ -130,12 +137,6 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         val al = AmbientLight()
         al.color = White.mult(0.12f)
         rootNode.addLight(al)
-    }
-
-    companion object {
-
-        const val SELECTED_ASSET = "SELECTED_ASSET"
-
     }
 
 }

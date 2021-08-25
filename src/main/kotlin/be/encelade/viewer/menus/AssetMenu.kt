@@ -12,7 +12,7 @@ import javax.swing.JFrame
 
 class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JFrame(), LazyLogging {
 
-    private val guiFont = Font("Arial", Font.PLAIN, 16)
+    private val guiFont = Font("Arial", Font.PLAIN, 17)
 
     private var selectedAssetNode: AssetNode? = null
     private var assetUpdateEnabled = false

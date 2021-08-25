@@ -1,20 +1,14 @@
 package be.encelade.viewer.scene
 
-import be.encelade.chimp.material.LightingMaterial
-import be.encelade.viewer.ViewerJmeApp.Companion.SELECTED_ASSET
-import be.encelade.viewer.utils.GeometryUtils.extractBoundingVolume
 import be.encelade.viewer.utils.LazyLogging
 import com.github.guepardoapps.kulid.ULID
 import com.jme3.app.SimpleApplication
 import com.jme3.asset.plugins.FileLocator
-import com.jme3.bounding.BoundingBox
 import com.jme3.math.Vector3f
 import com.jme3.renderer.queue.RenderQueue
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
 import com.jme3.scene.Spatial
-import com.jme3.scene.shape.Box
-import java.awt.Color.GREEN
 import java.io.File
 
 /**
@@ -38,7 +32,6 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         val assetNode = AssetNode(spatial.name, file)
         assetNodes += assetNode
         rootNode.attachChild(node)
-        drawBoundingBox(node)
 
         return SceneNode(assetNode, node)
     }
@@ -103,44 +96,6 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         } else {
             return null
         }
-    }
-
-    // TODO: move to its own little manager?
-    fun reDrawBoundingBox(node: Node) {
-        deleteBoundingBox()
-        drawBoundingBox(node)
-    }
-
-    fun deleteBoundingBox() {
-        rootNode.detachChildNamed(SELECTED_ASSET)
-    }
-
-    fun drawBoundingBox(sceneNode: SceneNode): Geometry? {
-        return drawBoundingBox(sceneNode.node)
-    }
-
-    private fun drawBoundingBox(node: Node): Geometry? {
-        deleteBoundingBox()
-
-        val volume = extractBoundingVolume(node)
-        if (volume is BoundingBox) {
-            val material = LightingMaterial()
-            material.setColor(GREEN)
-            material.additionalRenderState.isWireframe = true
-
-            val box = Geometry(SELECTED_ASSET, Box(volume.xExtent, volume.yExtent, volume.zExtent))
-            box.material = material
-
-            box.localTranslation = node.localTranslation
-            box.localRotation = node.localRotation
-            box.localScale = node.localScale
-            box.move(volume.center)
-            rootNode.attachChild(box)
-
-            return box
-        }
-
-        return null
     }
 
 }
