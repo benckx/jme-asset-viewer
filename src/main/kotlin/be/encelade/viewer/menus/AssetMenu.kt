@@ -16,16 +16,18 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
 
     private val context = GuiContext(propertiesFile)
     private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, context, this)
+    private val assetListPanel = AssetListPanel(guiFont, context)
     private val coordinatesPanel = AssetCoordinatesPanel(guiFont, commandQueue, context)
 
     init {
         title = defaultTitle
-        setBounds(300, 90, 340, 500)
+        setBounds(300, 90, 350, 600)
         defaultCloseOperation = EXIT_ON_CLOSE
         isResizable = true
 
         layout = BorderLayout()
         add(buttonPanel, BorderLayout.NORTH)
+        add(assetListPanel, BorderLayout.CENTER)
         add(coordinatesPanel, BorderLayout.SOUTH)
 
         isVisible = true
@@ -33,6 +35,10 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
 
     fun show(sceneNode: SceneNode) {
         show(sceneNode.assetNode, sceneNode.node)
+    }
+
+    fun addToAssetList(sceneNode: SceneNode) {
+        assetListPanel.add(sceneNode)
     }
 
     private fun show(assetNode: AssetNode, node: Node) {

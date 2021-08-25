@@ -38,7 +38,10 @@ internal class AssetButtonPanel(guiFont: Font,
                 val file = fileChooser.selectedFile
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 context.lastFolder = containingFolder
-                commandQueue.push(ImportAssetCommand(file) { sceneNode -> parent.show(sceneNode) })
+                commandQueue.push(ImportAssetCommand(file) { sceneNode ->
+                    parent.addToAssetList(sceneNode)
+                    parent.show(sceneNode)
+                })
             }
         }
 
