@@ -10,7 +10,7 @@ import com.jme3.scene.shape.Box
 import java.awt.Color.GREEN
 
 /**
- * Manage the list of imported assets in the scene (store as [AssetNode])
+ * Draw the wireframe [BoundingBox] around select assets, as to show which asset is selected.
  */
 class BoundingBoxManager(private val rootNode: Node) : LazyLogging {
 
