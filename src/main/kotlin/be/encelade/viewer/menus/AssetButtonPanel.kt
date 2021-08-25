@@ -47,13 +47,19 @@ internal class AssetButtonPanel(guiFont: Font,
 
         cloneButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
-                commandQueue.push(CloneCommand(assetNode.id) { sceneNode -> parent.show(sceneNode) })
+                commandQueue.push(CloneCommand(assetNode.id) { sceneNode ->
+                    parent.addToAssetList(sceneNode)
+                    parent.show(sceneNode)
+                })
             }
         }
 
         deleteButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
-                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) { parent.disableFocus() })
+                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) {
+                    // TODO: remove from asset list
+                    parent.disableFocus()
+                })
             }
         }
     }
