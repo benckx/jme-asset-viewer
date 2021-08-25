@@ -20,7 +20,7 @@ class MyActionListener(private val rootNode: Node,
                 MOUSE_CLICK -> {
                     val sceneNode = findSceneNode()
                     if (sceneNode != null) {
-                        assetMenu.showInForm(sceneNode)
+                        assetMenu.show(sceneNode)
                         boundingBoxManager.drawBoundingBox(sceneNode)
                     } else {
                         assetMenu.disableFocus()

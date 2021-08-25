@@ -72,6 +72,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
         add(scaleField)
 
         components.forEach { component -> component.font = guiFont }
+
         disableFocus()
 
         positionFields.forEach { field ->
@@ -111,7 +112,6 @@ internal class AssetCoordinatesPanel(guiFont: Font,
                 commandQueue.push(TranslationCommand(assetNode.id, toVector3f(positionFields)))
             }
         }
-
     }
 
     private fun updateRotation() {

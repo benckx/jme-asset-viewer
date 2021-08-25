@@ -12,7 +12,7 @@ import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JPanel
 
-internal class AssetButtonPanel(font: Font,
+internal class AssetButtonPanel(guiFont: Font,
                                 commandQueue: CommandQueue,
                                 propertiesFile: PropertiesFile,
                                 parent: AssetMenu) : JPanel() {
@@ -29,7 +29,7 @@ internal class AssetButtonPanel(font: Font,
         add(importButton)
         add(deleteButton)
         add(cloneButton)
-        components.forEach { component -> component.font = font }
+        components.forEach { component -> component.font = guiFont }
 
         disableFocus()
 
@@ -42,13 +42,13 @@ internal class AssetButtonPanel(font: Font,
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 lastFolder = containingFolder
                 propertiesFile.persistProperty(PropertiesFile.DEFAULT_FOLDER_KEY, containingFolder)
-                commandQueue.push(ImportAssetCommand(file) { sceneNode -> parent.showInForm(sceneNode) })
+                commandQueue.push(ImportAssetCommand(file) { sceneNode -> parent.show(sceneNode) })
             }
         }
 
         cloneButton.addActionListener {
             parent.selectedAssetNode()?.let { assetNode ->
-                commandQueue.push(CloneCommand(assetNode.id) { sceneNode -> parent.showInForm(sceneNode) })
+                commandQueue.push(CloneCommand(assetNode.id) { sceneNode -> parent.show(sceneNode) })
             }
         }
 
