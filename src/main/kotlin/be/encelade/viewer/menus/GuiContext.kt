@@ -14,15 +14,18 @@ internal class GuiContext(private val propertiesFile: PropertiesFile) {
     var assetUpdateEnabled = false
 
     var lastFolder: String? = null
+        get() {
+            return if (field == null) {
+                propertiesFile.getProperty(DEFAULT_FOLDER_KEY)
+            } else {
+                field
+            }
+        }
         set(value) {
             if (value != null) {
                 field = value
                 propertiesFile.persistProperty(DEFAULT_FOLDER_KEY, value)
             }
         }
-
-    init {
-        this.lastFolder = propertiesFile.getProperty(DEFAULT_FOLDER_KEY)
-    }
 
 }
