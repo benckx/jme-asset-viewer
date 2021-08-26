@@ -12,6 +12,7 @@ import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
 import be.encelade.viewer.scene.DecorNode
+import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesKey.HEIGHT
 import be.encelade.viewer.utils.PropertiesKey.WIDTH
@@ -28,7 +29,7 @@ import java.awt.Toolkit
 import kotlin.system.exitProcess
 
 class ViewerJmeApp(private val properties: PropertiesFile,
-                   private val lightingEnabled: Boolean) : SimpleApplication() {
+                   private val lightingEnabled: Boolean) : SimpleApplication(), LazyLogging {
 
     private lateinit var cameraManager: CameraManager
 
@@ -38,6 +39,8 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
     private val commandQueue = CommandQueue()
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
+
+    private lateinit var assetMenu: AssetMenu
 
     override fun simpleInitApp() {
         if (settings.isFullscreen) {
@@ -52,7 +55,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         val jmeLocation = Point(x, y)
 
         // input and GUI
-        val assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
+        assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
 
         // persist selected dimension
         properties.persistProperty(WIDTH, settings.width.toString())

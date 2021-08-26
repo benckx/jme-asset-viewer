@@ -18,11 +18,13 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     private val scrollPane = JScrollPane(list)
 
     private val selectionListener = ListSelectionListener { e ->
-        logger.info("received event [firstIndex=${e.firstIndex}, lastIndex=${e.lastIndex}, isAdjusting=${e.valueIsAdjusting}]")
-        val sceneNode = listModel.get(e.firstIndex)
-        commandQueue.queue(SelectAssetCommand(sceneNode) {
-            parent.show(sceneNode, showInList = false)
-        })
+        if (!e.valueIsAdjusting) {
+            list.selectedValue?.let { sceneNode ->
+                commandQueue.queue(SelectAssetCommand(sceneNode) {
+                    parent.show(sceneNode, showInList = false)
+                })
+            }
+        }
     }
 
     init {
@@ -47,8 +49,9 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
 
     internal fun remove(id: String) {
         executeWithoutListener {
-            list.remove(indexOf(id))
-            disableFocus()
+            listModel.remove(indexOf(id))
+            list.clearSelection()
+            list.repaint()
         }
     }
 
@@ -82,7 +85,7 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
 
         override fun getListCellRendererComponent(list: JList<out SceneNode>?, value: SceneNode?, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
             val label = JLabel(value!!.assetNode.fileName)
-            if (isSelected || cellHasFocus) {
+            if (isSelected) {
                 label.background = Color.BLUE
                 label.foreground = Color.WHITE
                 label.isOpaque = true
