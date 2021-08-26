@@ -12,7 +12,6 @@ import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
 import be.encelade.viewer.scene.DecorNode
-import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import com.jme3.app.SimpleApplication
 import com.jme3.input.MouseInput.BUTTON_LEFT
@@ -24,7 +23,7 @@ import com.jme3.math.Vector3f
 import com.jme3.shadow.DirectionalLightShadowRenderer
 import kotlin.system.exitProcess
 
-class ViewerJmeApp : SimpleApplication(), LazyLogging {
+class ViewerJmeApp : SimpleApplication() {
 
     private lateinit var cameraManager: CameraManager
 
