@@ -22,20 +22,14 @@ class PropertiesFile(fileName: String) : LazyLogging {
         }
     }
 
-    fun getProperty(key: String): String? {
-        return props.getProperty(key)
+    fun getProperty(key: PropertiesKey): String? {
+        return props.getProperty(key.name)
     }
 
-    fun persistProperty(key: String, value: String) {
-        props.setProperty(key, value)
+    fun persistProperty(key: PropertiesKey, value: String) {
+        props.setProperty(key.name, value)
         props.store(FileOutputStream(file), null)
-    }
-
-    companion object {
-
-        // TODO: move to enum
-        const val DEFAULT_FOLDER_KEY = "DEFAULT_FOLDER"
-
+        logger.debug("persisted $key -> $value")
     }
 
 }

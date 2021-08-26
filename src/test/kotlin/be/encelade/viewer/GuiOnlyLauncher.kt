@@ -3,6 +3,7 @@ package be.encelade.viewer
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.utils.PropertiesFile
+import java.awt.Point
 import javax.swing.UIManager
 
 /**
@@ -14,5 +15,5 @@ fun main() {
 
     val propertiesFile = PropertiesFile("preferences.properties")
     val commandQueue = CommandQueue()
-    AssetMenu(propertiesFile, commandQueue)
+    AssetMenu(propertiesFile, commandQueue, Point(500, 500))
 }
