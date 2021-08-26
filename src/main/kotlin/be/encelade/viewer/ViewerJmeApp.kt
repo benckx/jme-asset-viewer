@@ -10,6 +10,7 @@ import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
 import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
+import be.encelade.viewer.scene.CommandExecutor
 import be.encelade.viewer.scene.DecorNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
@@ -20,19 +21,19 @@ import com.jme3.light.AmbientLight
 import com.jme3.light.DirectionalLight
 import com.jme3.math.ColorRGBA.White
 import com.jme3.math.Vector3f
-import com.jme3.scene.Node
 import com.jme3.shadow.DirectionalLightShadowRenderer
 import kotlin.system.exitProcess
 
 class ViewerJmeApp : SimpleApplication(), LazyLogging {
 
-    private val commandQueue = CommandQueue()
-
     private lateinit var cameraManager: CameraManager
-    private lateinit var mouseInputManager: MouseInputManager
 
-    private lateinit var assetNodeManager: AssetNodeManager
-    private lateinit var boundingBoxManager: BoundingBoxManager
+    private val mouseInputManager = MouseInputManager(this)
+    private val assetNodeManager = AssetNodeManager(this)
+    private val boundingBoxManager = BoundingBoxManager(this)
+
+    private val commandQueue = CommandQueue()
+    private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
 
     override fun simpleInitApp() {
         // init chimp-utils API for materials
@@ -50,15 +51,8 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         // properties
         val propertiesFile = PropertiesFile("preferences.properties")
 
-        // TODO: managers that depends on app can be initiated directly as val
-        //  since they load app's field in lazy
-        // init managers
-        assetNodeManager = AssetNodeManager(this)
-        boundingBoxManager = BoundingBoxManager(rootNode)
-
         // input and GUI
         val assetMenu = AssetMenu(propertiesFile, commandQueue)
-        mouseInputManager = MouseInputManager(this)
         val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
 
         // mappings
@@ -69,50 +63,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
-        executeCommands()
-    }
-
-    // TODO: move to "CommandExecutor"
-    private fun executeCommands() {
-        commandQueue.flushImportCommands().forEach { command ->
-            val sceneNode = assetNodeManager.importAsset(command.file)
-            boundingBoxManager.drawBoundingBox(sceneNode)
-            command.callback(sceneNode)
-        }
-
-        commandQueue.flushDeleteCommands().forEach { command ->
-            assetNodeManager.delete(command.id)
-            boundingBoxManager.deleteBoundingBox()
-            command.callback()
-        }
-
-        commandQueue.flushCloneCommands().forEach { command ->
-            assetNodeManager.clone(command.id)?.let { sceneNode ->
-                sceneNode.node.move(1f, 1f, 0f)
-                command.callback(sceneNode)
-            }
-        }
-
-        commandQueue.flushTranslationCommands().forEach { command ->
-            rootNode.getChild(command.id)?.let { spatial ->
-                spatial.localTranslation = command.translation
-                boundingBoxManager.reDrawBoundingBox(spatial as Node)
-            }
-        }
-
-        commandQueue.flushRotationCommands().forEach { command ->
-            rootNode.getChild(command.id)?.let { spatial ->
-                spatial.localRotation = command.rotation
-                boundingBoxManager.reDrawBoundingBox(spatial as Node)
-            }
-        }
-
-        commandQueue.flushScaleCommands().forEach { command ->
-            rootNode.getChild(command.id)?.let { spatial ->
-                spatial.localScale = command.toVector3f()
-                boundingBoxManager.reDrawBoundingBox(spatial as Node)
-            }
-        }
+        commandExecutor.simpleUpdate(tpf)
     }
 
     override fun destroy() {

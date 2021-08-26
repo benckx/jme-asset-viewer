@@ -58,13 +58,12 @@ class CommandQueue : LazyLogging {
 
     fun flushScaleCommands() = flushCommands(scaleCommands)
 
-    private companion object : LazyLogging {
+    private companion object {
 
         fun <C> flushCommands(commands: MutableList<C>): List<C> {
             return if (commands.isNotEmpty()) {
                 val result = commands.toList()
                 commands.clear()
-                logger.debug("flushing ${result.joinToString(", ")}")
                 result
             } else {
                 listOf()

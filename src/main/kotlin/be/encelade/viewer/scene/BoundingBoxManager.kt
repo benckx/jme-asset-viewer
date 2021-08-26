@@ -3,6 +3,7 @@ package be.encelade.viewer.scene
 import be.encelade.chimp.material.UnshadedMaterial
 import be.encelade.viewer.utils.GeometryUtils.extractBoundingVolume
 import be.encelade.viewer.utils.LazyLogging
+import com.jme3.app.SimpleApplication
 import com.jme3.bounding.BoundingBox
 import com.jme3.scene.Geometry
 import com.jme3.scene.Node
@@ -12,7 +13,9 @@ import java.awt.Color.GREEN
 /**
  * Draw the wireframe [BoundingBox] around select assets, as to show which asset is selected.
  */
-class BoundingBoxManager(private val rootNode: Node) : LazyLogging {
+class BoundingBoxManager(app: SimpleApplication) : LazyLogging {
+
+    private val rootNode by lazy { app.rootNode }
 
     fun reDrawBoundingBox(node: Node) {
         deleteBoundingBox()
