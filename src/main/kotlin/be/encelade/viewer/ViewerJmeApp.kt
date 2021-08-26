@@ -21,7 +21,10 @@ import com.jme3.light.DirectionalLight
 import com.jme3.math.ColorRGBA.White
 import com.jme3.math.Vector3f
 import com.jme3.shadow.DirectionalLightShadowRenderer
+import java.awt.Point
+import java.awt.Toolkit
 import kotlin.system.exitProcess
+
 
 class ViewerJmeApp(private val lightingEnabled: Boolean) : SimpleApplication() {
 
@@ -56,8 +59,14 @@ class ViewerJmeApp(private val lightingEnabled: Boolean) : SimpleApplication() {
         // properties
         val propertiesFile = PropertiesFile("preferences.properties")
 
+        // location of JME windows
+        val screenDimension = Toolkit.getDefaultToolkit().screenSize
+        val x = ((screenDimension.width - settings.width) / 2)
+        val y = ((screenDimension.height - settings.height) / 2)
+        val jmeLocation = Point(x, y)
+
         // input and GUI
-        val assetMenu = AssetMenu(propertiesFile, commandQueue)
+        val assetMenu = AssetMenu(propertiesFile, commandQueue, jmeLocation)
         val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
 
         // mappings
