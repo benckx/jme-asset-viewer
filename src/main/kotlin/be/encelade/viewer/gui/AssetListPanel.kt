@@ -39,24 +39,34 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     }
 
     internal fun add(sceneNode: SceneNode) {
-        listModel.addElement(sceneNode)
-        list.selectedIndex = list.lastVisibleIndex
+        executeWithoutListener {
+            listModel.addElement(sceneNode)
+            list.selectedIndex = list.lastVisibleIndex
+        }
     }
 
     internal fun remove(id: String) {
-        list.remove(indexOf(id))
-        disableFocus()
+        executeWithoutListener {
+            list.remove(indexOf(id))
+            disableFocus()
+        }
     }
 
     internal fun show(sceneNode: SceneNode) {
-        list.removeListSelectionListener(selectionListener)
-        list.selectedIndex = indexOf(sceneNode)
-        list.addListSelectionListener(selectionListener)
+        executeWithoutListener {
+            list.selectedIndex = indexOf(sceneNode)
+        }
     }
 
     internal fun disableFocus() {
+        executeWithoutListener {
+            list.clearSelection()
+        }
+    }
+
+    private fun executeWithoutListener(callback: () -> Unit) {
         list.removeListSelectionListener(selectionListener)
-        list.clearSelection()
+        callback()
         list.addListSelectionListener(selectionListener)
     }
 

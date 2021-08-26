@@ -41,7 +41,7 @@ internal class AssetButtonPanel(guiFont: Font,
                 context.lastFolder = containingFolder
                 commandQueue.queue(ImportAssetCommand(file) { sceneNode ->
                     parent.addToAssetList(sceneNode)
-                    parent.show(sceneNode)
+                    parent.show(sceneNode, showInList = false)
                 })
             }
         }
