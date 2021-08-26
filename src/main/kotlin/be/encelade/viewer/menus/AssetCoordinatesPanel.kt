@@ -4,6 +4,7 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.RotationCommand
 import be.encelade.viewer.commands.ScaleCommand
 import be.encelade.viewer.commands.TranslationCommand
+import be.encelade.viewer.menus.EventListenerUtils.addAnyUpdateDocumentListener
 import be.encelade.viewer.menus.GuiUtils.allFloats
 import be.encelade.viewer.menus.GuiUtils.isFloat
 import be.encelade.viewer.menus.GuiUtils.toQuaternion
@@ -15,8 +16,6 @@ import java.awt.GridLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
 
 internal class AssetCoordinatesPanel(guiFont: Font,
                                      private val commandQueue: CommandQueue,
@@ -76,32 +75,17 @@ internal class AssetCoordinatesPanel(guiFont: Font,
         disableFocus()
 
         positionFields.forEach { field ->
-            field.document.addDocumentListener(object : DocumentListener {
-                override fun insertUpdate(e: DocumentEvent?) = updatePosition()
-                override fun removeUpdate(e: DocumentEvent?) = updatePosition()
-                override fun changedUpdate(e: DocumentEvent?) = updatePosition()
-            })
-
+            field.document.addAnyUpdateDocumentListener { updatePosition() }
             updateOnMouseWheel(field, .1f)
         }
 
         rotationFields.forEach { field ->
-            field.document.addDocumentListener(object : DocumentListener {
-                override fun insertUpdate(e: DocumentEvent?) = updateRotation()
-                override fun removeUpdate(e: DocumentEvent?) = updateRotation()
-                override fun changedUpdate(e: DocumentEvent?) = updateRotation()
-            })
-
+            field.document.addAnyUpdateDocumentListener { updateRotation() }
             updateOnMouseWheel(field, 1f)
         }
 
         scaleFields.forEach { field ->
-            field.document.addDocumentListener(object : DocumentListener {
-                override fun insertUpdate(e: DocumentEvent?) = updateScale()
-                override fun removeUpdate(e: DocumentEvent?) = updateScale()
-                override fun changedUpdate(e: DocumentEvent?) = updateScale()
-            })
-
+            field.document.addAnyUpdateDocumentListener { updateScale() }
             updateOnMouseWheel(field, .05f)
         }
     }
