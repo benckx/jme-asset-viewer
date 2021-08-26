@@ -5,8 +5,10 @@ import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesKey.*
 import com.jme3.system.AppSettings
 import org.apache.commons.lang3.StringUtils.isNumeric
+import org.slf4j.LoggerFactory
 import javax.swing.UIManager
 import kotlin.concurrent.thread
+import kotlin.system.measureTimeMillis
 
 const val PROPERTIES_FILE = "preferences.properties"
 const val DEFAULT_WIDTH = 1280
@@ -15,15 +17,17 @@ const val DEFAULT_HEIGHT = 720
 fun main(args: Array<String>) {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     val properties = PropertiesFile(PROPERTIES_FILE)
+    val logger = LoggerFactory.getLogger("Main")
 
     // JFileChooser first execution is very slow, so we pre-load it in a thread
     thread {
-        println("preloading JFileChooser")
-        val fileChooser = buildFileChooser(properties.getProperty(DEFAULT_FOLDER))
-        fileChooser.isVisible = false
-        println("JFileChooser pre-loaded")
+        logger.info("preloading JFileChooser")
+        val millis = measureTimeMillis {
+            val fileChooser = buildFileChooser(properties.getProperty(DEFAULT_FOLDER))
+            fileChooser.isVisible = false
+        }
+        logger.info("JFileChooser pre-loaded in $millis ms.")
     }
-
 
     val persistedWidth = properties.getProperty(WIDTH)
     val persistedHeight = properties.getProperty(HEIGHT)
