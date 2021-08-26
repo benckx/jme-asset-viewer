@@ -4,7 +4,7 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.RotationCommand
 import be.encelade.viewer.commands.ScaleCommand
 import be.encelade.viewer.commands.TranslationCommand
-import be.encelade.viewer.menus.EventListenerUtils.addAnyUpdateDocumentListener
+import be.encelade.viewer.menus.EventListenerUtils.addDocumentListener
 import be.encelade.viewer.menus.GuiUtils.allFloats
 import be.encelade.viewer.menus.GuiUtils.isFloat
 import be.encelade.viewer.menus.GuiUtils.toQuaternion
@@ -75,17 +75,17 @@ internal class AssetCoordinatesPanel(guiFont: Font,
         disableFocus()
 
         positionFields.forEach { field ->
-            field.addAnyUpdateDocumentListener { updatePosition() }
+            field.addDocumentListener { updatePosition() }
             updateOnMouseWheel(field, .1f)
         }
 
         rotationFields.forEach { field ->
-            field.addAnyUpdateDocumentListener { updateRotation() }
+            field.addDocumentListener { updateRotation() }
             updateOnMouseWheel(field, 1f)
         }
 
         scaleFields.forEach { field ->
-            field.addAnyUpdateDocumentListener { updateScale() }
+            field.addDocumentListener { updateScale() }
             updateOnMouseWheel(field, .05f)
         }
     }
@@ -116,6 +116,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
 
     }
 
+    // TODO: move to EventListenerUtils
     private fun updateOnMouseWheel(field: JTextField, amount: Float) {
         field.addMouseWheelListener { e ->
             if (isFloat(field)) {
