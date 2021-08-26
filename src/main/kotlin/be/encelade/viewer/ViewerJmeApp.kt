@@ -5,9 +5,9 @@ import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
+import be.encelade.viewer.input.MouseClickActionListener
+import be.encelade.viewer.input.MouseClickActionListener.Companion.MOUSE_CLICK
 import be.encelade.viewer.input.MouseInputManager
-import be.encelade.viewer.input.MyActionListener
-import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
@@ -69,10 +69,10 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
         // input and GUI
         val assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
-        val actionListener = MyActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
+        val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
 
         // mappings
-        inputManager.addListener(actionListener, MOUSE_CLICK)
+        inputManager.addListener(mouseClickActionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
 

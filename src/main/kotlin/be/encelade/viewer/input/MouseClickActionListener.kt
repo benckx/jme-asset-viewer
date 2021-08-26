@@ -8,11 +8,11 @@ import be.encelade.viewer.utils.LazyLogging
 import com.jme3.input.controls.ActionListener
 import com.jme3.scene.Node
 
-class MyActionListener(private val rootNode: Node,
-                       private val mouseInputManager: MouseInputManager,
-                       private val assetNodeManager: AssetNodeManager,
-                       private val boundingBoxManager: BoundingBoxManager,
-                       private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
+class MouseClickActionListener(private val rootNode: Node,
+                               private val mouseInputManager: MouseInputManager,
+                               private val assetNodeManager: AssetNodeManager,
+                               private val boundingBoxManager: BoundingBoxManager,
+                               private val assetMenu: AssetMenu) : ActionListener, LazyLogging {
 
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
         if (!isPressed) {
