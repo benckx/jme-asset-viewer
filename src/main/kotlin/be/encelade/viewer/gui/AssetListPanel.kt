@@ -3,17 +3,27 @@ package be.encelade.viewer.gui
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.SelectAssetCommand
 import be.encelade.viewer.scene.SceneNode
+import be.encelade.viewer.utils.LazyLogging
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import javax.swing.*
+import javax.swing.event.ListSelectionListener
 
-internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent: AssetMenu) : JPanel() {
+internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent: AssetMenu) : JPanel(), LazyLogging {
 
     private val listModel = DefaultListModel<SceneNode>()
     private val list = JList(listModel)
     private val scrollPane = JScrollPane(list)
+
+    private val selectionListener = ListSelectionListener { e ->
+        logger.info("selection event [${e.firstIndex}, ${e.lastIndex}, ${e.valueIsAdjusting}]")
+        val sceneNode = listModel.get(e.firstIndex)
+        commandQueue.queue(SelectAssetCommand(sceneNode) {
+            parent.show(sceneNode, showInList = false)
+        })
+    }
 
     init {
         layout = BorderLayout()
@@ -25,12 +35,7 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         add(titleLabel, BorderLayout.NORTH)
         add(scrollPane, BorderLayout.CENTER)
 
-        list.addListSelectionListener { e ->
-            val sceneNode = listModel.get(e.firstIndex)
-            commandQueue.queue(SelectAssetCommand(sceneNode) {
-                parent.show(sceneNode, showInList = false)
-            })
-        }
+        list.addListSelectionListener(selectionListener)
     }
 
     internal fun add(sceneNode: SceneNode) {
@@ -48,7 +53,9 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     }
 
     internal fun disableFocus() {
+        list.removeListSelectionListener(selectionListener)
         list.clearSelection()
+        list.addListSelectionListener(selectionListener)
     }
 
     private fun indexOf(sceneNode: SceneNode): Int {

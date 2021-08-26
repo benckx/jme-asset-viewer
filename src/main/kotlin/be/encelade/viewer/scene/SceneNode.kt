@@ -9,6 +9,10 @@ data class SceneNode(val assetNode: AssetNode, val node: Node) {
 
     fun id() = assetNode.id
 
+    override fun toString(): String {
+        return "SceneNode[${id()}, ${assetNode.fileName}]"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
