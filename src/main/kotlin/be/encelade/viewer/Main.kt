@@ -7,13 +7,14 @@ import com.jme3.system.AppSettings
 import org.apache.commons.lang3.StringUtils.isNumeric
 import javax.swing.UIManager
 
+const val PROPERTIES_FILE = "preferences.properties"
 const val DEFAULT_WIDTH = 1280
 const val DEFAULT_HEIGHT = 720
 
 fun main(args: Array<String>) {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
-    val properties = PropertiesFile("preferences.properties")
+    val properties = PropertiesFile(PROPERTIES_FILE)
     val persistedWidth = properties.getProperty(WIDTH)
     val persistedHeight = properties.getProperty(HEIGHT)
     val width = if (persistedWidth != null && isNumeric(persistedWidth)) persistedWidth.toInt() else DEFAULT_WIDTH

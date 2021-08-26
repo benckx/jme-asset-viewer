@@ -13,7 +13,7 @@ import javax.swing.UIManager
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
-    val propertiesFile = PropertiesFile("preferences.properties")
+    val propertiesFile = PropertiesFile(PROPERTIES_FILE)
     val commandQueue = CommandQueue()
     AssetMenu(propertiesFile, commandQueue, Point(500, 500))
 }
