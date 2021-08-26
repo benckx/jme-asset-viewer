@@ -57,7 +57,7 @@ internal class AssetButtonPanel(guiFont: Font,
         deleteButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
                 commandQueue.push(DeleteAssetNodeCommand(assetNode.id) {
-                    // TODO: remove from asset list
+                    parent.removeFromAssetList(assetNode.id)
                     parent.disableFocus()
                 })
             }

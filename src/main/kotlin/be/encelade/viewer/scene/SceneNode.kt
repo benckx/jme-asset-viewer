@@ -7,6 +7,8 @@ import com.jme3.scene.Node
  */
 data class SceneNode(val assetNode: AssetNode, val node: Node) {
 
+    fun id() = assetNode.id
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

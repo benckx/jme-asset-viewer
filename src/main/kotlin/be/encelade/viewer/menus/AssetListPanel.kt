@@ -29,13 +29,25 @@ internal class AssetListPanel(guiFont: Font) : JPanel() {
         list.selectedIndex = list.lastVisibleIndex
     }
 
+    internal fun remove(id: String) {
+        list.remove(indexOf(id))
+        list.clearSelection()
+    }
+
     internal fun show(sceneNode: SceneNode) {
-        val i = listModel.elements()!!.toList().indexOf(sceneNode)
-        list.selectedIndex = i
+        list.selectedIndex = indexOf(sceneNode)
     }
 
     internal fun disableFocus() {
         list.clearSelection()
+    }
+
+    private fun indexOf(sceneNode: SceneNode): Int {
+        return listModel.elements()!!.toList().indexOf(sceneNode)
+    }
+
+    private fun indexOf(id: String): Int {
+        return listModel.elements()!!.toList().indexOfFirst { sceneNode -> sceneNode.id() == id }
     }
 
     private class AssetNodeRenderer : ListCellRenderer<SceneNode> {

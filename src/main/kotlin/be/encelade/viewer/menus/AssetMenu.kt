@@ -35,6 +35,10 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
         assetListPanel.add(sceneNode)
     }
 
+    fun removeFromAssetList(id: String) {
+        assetListPanel.remove(id)
+    }
+
     fun show(sceneNode: SceneNode) {
         context.selectedAssetNode = sceneNode.assetNode
         title = sceneNode.assetNode.fileName
