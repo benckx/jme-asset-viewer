@@ -50,6 +50,8 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         // properties
         val propertiesFile = PropertiesFile("preferences.properties")
 
+        // TODO: managers that depends on app can be initiated directly as val
+        //  since they load app's field in lazy
         // init managers
         assetNodeManager = AssetNodeManager(this)
         boundingBoxManager = BoundingBoxManager(rootNode)
@@ -70,6 +72,7 @@ class ViewerJmeApp : SimpleApplication(), LazyLogging {
         executeCommands()
     }
 
+    // TODO: move to "CommandExecutor"
     private fun executeCommands() {
         commandQueue.flushImportCommands().forEach { command ->
             val sceneNode = assetNodeManager.importAsset(command.file)
