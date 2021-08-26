@@ -47,6 +47,7 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
     }
 
     fun show(sceneNode: SceneNode, showInList: Boolean = true) {
+        context.assetUpdateEnabled = false
         context.selectedAssetNode = sceneNode.assetNode
         title = sceneNode.assetNode.fileName
         buttonPanel.enableFocus()

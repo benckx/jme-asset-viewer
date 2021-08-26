@@ -1,11 +1,12 @@
 package be.encelade.viewer
 
+import be.encelade.viewer.gui.GuiUtils.buildFileChooser
 import be.encelade.viewer.utils.PropertiesFile
-import be.encelade.viewer.utils.PropertiesKey.HEIGHT
-import be.encelade.viewer.utils.PropertiesKey.WIDTH
+import be.encelade.viewer.utils.PropertiesKey.*
 import com.jme3.system.AppSettings
 import org.apache.commons.lang3.StringUtils.isNumeric
 import javax.swing.UIManager
+import kotlin.concurrent.thread
 
 const val PROPERTIES_FILE = "preferences.properties"
 const val DEFAULT_WIDTH = 1280
@@ -13,8 +14,17 @@ const val DEFAULT_HEIGHT = 720
 
 fun main(args: Array<String>) {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-
     val properties = PropertiesFile(PROPERTIES_FILE)
+
+    // JFileChooser first execution is very slow, so we pre-load it in a thread
+    thread {
+        println("preloading JFileChooser")
+        val fileChooser = buildFileChooser(properties.getProperty(DEFAULT_FOLDER))
+        fileChooser.isVisible = false
+        println("JFileChooser pre-loaded")
+    }
+
+
     val persistedWidth = properties.getProperty(WIDTH)
     val persistedHeight = properties.getProperty(HEIGHT)
     val width = if (persistedWidth != null && isNumeric(persistedWidth)) persistedWidth.toInt() else DEFAULT_WIDTH

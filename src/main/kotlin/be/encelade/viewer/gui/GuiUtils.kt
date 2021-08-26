@@ -3,9 +3,17 @@ package be.encelade.viewer.gui
 import com.jme3.math.FastMath
 import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
+import java.io.File
+import javax.swing.JFileChooser
 import javax.swing.JTextField
 
-internal object GuiUtils {
+object GuiUtils {
+
+    fun buildFileChooser(defaultFolder: String?): JFileChooser {
+        val fileChooser = JFileChooser()
+        defaultFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
+        return fileChooser
+    }
 
     fun isFloat(value: String): Boolean {
         return try {

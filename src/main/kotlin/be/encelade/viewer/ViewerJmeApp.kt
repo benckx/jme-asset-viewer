@@ -44,6 +44,17 @@ class ViewerJmeApp(private val properties: PropertiesFile,
             throw IllegalArgumentException("The Viewer can not work in fullscreen mode, as you wouldn't see the GUI")
         }
 
+        // location of JME windows
+        // this assumes the JME windows appears centered on the screen
+        val screenDimension = Toolkit.getDefaultToolkit().screenSize
+        val x = ((screenDimension.width - settings.width) / 2)
+        val y = ((screenDimension.height - settings.height) / 2)
+        val jmeLocation = Point(x, y)
+
+        // input and GUI
+        val assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
+
+        // persist selected dimension
         properties.persistProperty(WIDTH, settings.width.toString())
         properties.persistProperty(HEIGHT, settings.height.toString())
 
@@ -61,18 +72,8 @@ class ViewerJmeApp(private val properties: PropertiesFile,
             addLighting()
         }
 
-        // location of JME windows
-        // this assumes the JME windows appears centered on the screen
-        val screenDimension = Toolkit.getDefaultToolkit().screenSize
-        val x = ((screenDimension.width - settings.width) / 2)
-        val y = ((screenDimension.height - settings.height) / 2)
-        val jmeLocation = Point(x, y)
-
-        // input and GUI
-        val assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
+        // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
-
-        // mappings
         inputManager.addListener(mouseClickActionListener, MOUSE_CLICK)
         inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }

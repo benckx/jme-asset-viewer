@@ -4,6 +4,8 @@ import be.encelade.viewer.commands.CloneCommand
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.DeleteAssetNodeCommand
 import be.encelade.viewer.commands.ImportAssetCommand
+import be.encelade.viewer.gui.GuiUtils.buildFileChooser
+import be.encelade.viewer.utils.LazyLogging
 import java.awt.Font
 import java.awt.GridLayout
 import java.io.File
@@ -13,8 +15,8 @@ import javax.swing.JPanel
 
 internal class AssetButtonPanel(guiFont: Font,
                                 commandQueue: CommandQueue,
-                                context: GuiContext,
-                                parent: AssetMenu) : JPanel() {
+                                private val context: GuiContext,
+                                parent: AssetMenu) : JPanel(), LazyLogging {
 
     private val importButton = JButton("Import")
     private val cloneButton = JButton("Clone")
@@ -31,8 +33,7 @@ internal class AssetButtonPanel(guiFont: Font,
         disableFocus()
 
         importButton.addActionListener {
-            val fileChooser = JFileChooser()
-            context.lastFolder?.let { folder -> fileChooser.currentDirectory = File(folder) }
+            val fileChooser = buildFileChooser(context.lastFolder)
             val returnValue = fileChooser.showOpenDialog(importButton)
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 val file = fileChooser.selectedFile

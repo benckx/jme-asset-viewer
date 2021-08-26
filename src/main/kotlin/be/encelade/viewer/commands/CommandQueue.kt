@@ -59,6 +59,8 @@ class CommandQueue : LazyLogging {
 
     fun flushCloneCommands() = flushCommands(cloneCommands)
 
+    fun flushSelectionCommands() = flushCommands(selectAssetCommands)
+
     fun flushTranslationCommands() = flushCommands(translationCommands)
 
     fun flushRotationCommands() = flushCommands(rotationCommands)

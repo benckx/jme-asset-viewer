@@ -36,6 +36,12 @@ class CommandExecutor(app: SimpleApplication,
             }
         }
 
+        commandQueue.flushSelectionCommands().forEach { command ->
+            logger.debug("executing $command")
+            boundingBoxManager.drawBoundingBox(command.sceneNode)
+            command.callback()
+        }
+
         commandQueue.flushTranslationCommands().forEach { command ->
             logger.debug("executing $command")
             rootNode.getChild(command.id)?.let { spatial ->
