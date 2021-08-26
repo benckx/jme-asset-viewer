@@ -18,7 +18,7 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     private val scrollPane = JScrollPane(list)
 
     private val selectionListener = ListSelectionListener { e ->
-        logger.info("selection event [${e.firstIndex}, ${e.lastIndex}, ${e.valueIsAdjusting}]")
+        logger.info("received event [firstIndex=${e.firstIndex}, lastIndex=${e.lastIndex}, isAdjusting=${e.valueIsAdjusting}]")
         val sceneNode = listModel.get(e.firstIndex)
         commandQueue.queue(SelectAssetCommand(sceneNode) {
             parent.show(sceneNode, showInList = false)
@@ -45,11 +45,13 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
 
     internal fun remove(id: String) {
         list.remove(indexOf(id))
-        list.clearSelection()
+        disableFocus()
     }
 
     internal fun show(sceneNode: SceneNode) {
+        list.removeListSelectionListener(selectionListener)
         list.selectedIndex = indexOf(sceneNode)
+        list.addListSelectionListener(selectionListener)
     }
 
     internal fun disableFocus() {
