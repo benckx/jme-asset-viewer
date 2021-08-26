@@ -1,10 +1,12 @@
 package be.encelade.viewer.commands
 
+import be.encelade.viewer.utils.LazyLogging
+
 /**
  * Send commands from the GUI to the JME scene; ensuring the Scene is modified only by the JME thread.
  * The commands will be picked up the [com.jme3.app.SimpleApplication] during simpleUpdate
  */
-class CommandQueue {
+class CommandQueue : LazyLogging {
 
     private val importAssetCommands = mutableListOf<ImportAssetCommand>()
     private val deleteAssetNodeCommands = mutableListOf<DeleteAssetNodeCommand>()
@@ -16,26 +18,32 @@ class CommandQueue {
 
     fun push(command: ImportAssetCommand) {
         importAssetCommands += command
+        logger.debug("pushed $command")
     }
 
     fun push(command: DeleteAssetNodeCommand) {
         deleteAssetNodeCommands += command
+        logger.debug("pushed $command")
     }
 
     fun push(command: CloneCommand) {
         cloneCommands += command
+        logger.debug("pushed $command")
     }
 
     fun push(command: TranslationCommand) {
         translationCommands += command
+        logger.debug("pushed $command")
     }
 
     fun push(command: RotationCommand) {
         rotationCommands += command
+        logger.debug("pushed $command")
     }
 
     fun push(command: ScaleCommand) {
         scaleCommands += command
+        logger.debug("pushed $command")
     }
 
     fun flushImportCommands() = flushCommands(importAssetCommands)
@@ -50,12 +58,13 @@ class CommandQueue {
 
     fun flushScaleCommands() = flushCommands(scaleCommands)
 
-    private companion object {
+    private companion object : LazyLogging {
 
         fun <C> flushCommands(commands: MutableList<C>): List<C> {
             return if (commands.isNotEmpty()) {
                 val result = commands.toList()
                 commands.clear()
+                logger.debug("flushing ${result.joinToString(", ")}")
                 result
             } else {
                 listOf()

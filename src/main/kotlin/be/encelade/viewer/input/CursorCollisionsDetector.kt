@@ -5,7 +5,7 @@ import com.jme3.collision.CollisionResults
 import com.jme3.math.Ray
 import com.jme3.math.Vector2f
 
-class CursorCollisionsDetector(private val app: SimpleApplication) {
+class CursorCollisionsDetector(app: SimpleApplication) {
 
     private val rootNode by lazy { app.rootNode }
     private val camera by lazy { app.camera }
