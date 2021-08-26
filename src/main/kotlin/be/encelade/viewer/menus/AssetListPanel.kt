@@ -1,5 +1,7 @@
 package be.encelade.viewer.menus
 
+import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.commands.SelectAssetCommand
 import be.encelade.viewer.scene.SceneNode
 import java.awt.BorderLayout
 import java.awt.Color
@@ -7,7 +9,7 @@ import java.awt.Component
 import java.awt.Font
 import javax.swing.*
 
-internal class AssetListPanel(guiFont: Font) : JPanel() {
+internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent: AssetMenu) : JPanel() {
 
     private val listModel = DefaultListModel<SceneNode>()
     private val list = JList(listModel)
@@ -22,6 +24,13 @@ internal class AssetListPanel(guiFont: Font) : JPanel() {
 
         add(titleLabel, BorderLayout.NORTH)
         add(scrollPane, BorderLayout.CENTER)
+
+        list.addListSelectionListener { e ->
+            val sceneNode = listModel.get(e.firstIndex)
+            commandQueue.queue(SelectAssetCommand(sceneNode) {
+                parent.show(sceneNode, showInList = false)
+            })
+        }
     }
 
     internal fun add(sceneNode: SceneNode) {

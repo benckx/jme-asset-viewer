@@ -14,7 +14,7 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
 
     private val context = GuiContext(propertiesFile)
     private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, context, this)
-    private val assetListPanel = AssetListPanel(guiFont)
+    private val assetListPanel = AssetListPanel(guiFont, commandQueue, this)
     private val coordinatesPanel = AssetCoordinatesPanel(guiFont, commandQueue, context)
 
     init {
@@ -39,11 +39,13 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue) : JF
         assetListPanel.remove(id)
     }
 
-    fun show(sceneNode: SceneNode) {
+    fun show(sceneNode: SceneNode, showInList: Boolean = true) {
         context.selectedAssetNode = sceneNode.assetNode
         title = sceneNode.assetNode.fileName
         buttonPanel.enableFocus()
-        assetListPanel.show(sceneNode)
+        if (showInList) {
+            assetListPanel.show(sceneNode)
+        }
         coordinatesPanel.show(sceneNode.node)
         context.assetUpdateEnabled = true
     }

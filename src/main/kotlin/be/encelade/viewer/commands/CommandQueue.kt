@@ -12,38 +12,45 @@ class CommandQueue : LazyLogging {
     private val deleteAssetNodeCommands = mutableListOf<DeleteAssetNodeCommand>()
     private val cloneCommands = mutableListOf<CloneCommand>()
 
+    private val selectAssetCommands = mutableListOf<SelectAssetCommand>()
+
     private val translationCommands = mutableListOf<TranslationCommand>()
     private val rotationCommands = mutableListOf<RotationCommand>()
     private val scaleCommands = mutableListOf<ScaleCommand>()
 
-    fun push(command: ImportAssetCommand) {
+    fun queue(command: ImportAssetCommand) {
         importAssetCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
-    fun push(command: DeleteAssetNodeCommand) {
+    fun queue(command: DeleteAssetNodeCommand) {
         deleteAssetNodeCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
-    fun push(command: CloneCommand) {
+    fun queue(command: CloneCommand) {
         cloneCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
-    fun push(command: TranslationCommand) {
+    fun queue(command: SelectAssetCommand) {
+        selectAssetCommands += command
+        logger.debug("queued $command")
+    }
+
+    fun queue(command: TranslationCommand) {
         translationCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
-    fun push(command: RotationCommand) {
+    fun queue(command: RotationCommand) {
         rotationCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
-    fun push(command: ScaleCommand) {
+    fun queue(command: ScaleCommand) {
         scaleCommands += command
-        logger.debug("pushed $command")
+        logger.debug("queued $command")
     }
 
     fun flushImportCommands() = flushCommands(importAssetCommands)

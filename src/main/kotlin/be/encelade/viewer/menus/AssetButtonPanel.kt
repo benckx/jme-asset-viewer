@@ -38,7 +38,7 @@ internal class AssetButtonPanel(guiFont: Font,
                 val file = fileChooser.selectedFile
                 val containingFolder = file.path.split(File.separator).dropLast(1).joinToString(File.separator)
                 context.lastFolder = containingFolder
-                commandQueue.push(ImportAssetCommand(file) { sceneNode ->
+                commandQueue.queue(ImportAssetCommand(file) { sceneNode ->
                     parent.addToAssetList(sceneNode)
                     parent.show(sceneNode)
                 })
@@ -47,7 +47,7 @@ internal class AssetButtonPanel(guiFont: Font,
 
         cloneButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
-                commandQueue.push(CloneCommand(assetNode.id) { sceneNode ->
+                commandQueue.queue(CloneCommand(assetNode.id) { sceneNode ->
                     parent.addToAssetList(sceneNode)
                     parent.show(sceneNode)
                 })
@@ -56,7 +56,7 @@ internal class AssetButtonPanel(guiFont: Font,
 
         deleteButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
-                commandQueue.push(DeleteAssetNodeCommand(assetNode.id) {
+                commandQueue.queue(DeleteAssetNodeCommand(assetNode.id) {
                     parent.removeFromAssetList(assetNode.id)
                     parent.disableFocus()
                 })

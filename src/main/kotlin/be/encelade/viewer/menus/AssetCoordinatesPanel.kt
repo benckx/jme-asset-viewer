@@ -93,7 +93,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     private fun updatePosition() {
         context.selectedAssetNode?.let { assetNode ->
             if (allFloats(positionFields)) {
-                commandQueue.push(TranslationCommand(assetNode.id, toVector3f(positionFields)))
+                commandQueue.queue(TranslationCommand(assetNode.id, toVector3f(positionFields)))
             }
         }
     }
@@ -101,7 +101,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     private fun updateRotation() {
         context.selectedAssetNode?.let { assetNode ->
             if (allFloats(rotationFields)) {
-                commandQueue.push(RotationCommand(assetNode.id, toQuaternion(rotationFields)))
+                commandQueue.queue(RotationCommand(assetNode.id, toQuaternion(rotationFields)))
             }
 
         }
@@ -110,7 +110,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
     private fun updateScale() {
         context.selectedAssetNode?.let { assetNode ->
             if (allFloats(scaleFields)) {
-                commandQueue.push(ScaleCommand(assetNode.id, scaleField.text.toFloat()))
+                commandQueue.queue(ScaleCommand(assetNode.id, scaleField.text.toFloat()))
             }
         }
 
