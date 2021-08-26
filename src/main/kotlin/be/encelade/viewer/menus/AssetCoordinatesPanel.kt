@@ -75,17 +75,17 @@ internal class AssetCoordinatesPanel(guiFont: Font,
         disableFocus()
 
         positionFields.forEach { field ->
-            field.document.addAnyUpdateDocumentListener { updatePosition() }
+            field.addAnyUpdateDocumentListener { updatePosition() }
             updateOnMouseWheel(field, .1f)
         }
 
         rotationFields.forEach { field ->
-            field.document.addAnyUpdateDocumentListener { updateRotation() }
+            field.addAnyUpdateDocumentListener { updateRotation() }
             updateOnMouseWheel(field, 1f)
         }
 
         scaleFields.forEach { field ->
-            field.document.addAnyUpdateDocumentListener { updateScale() }
+            field.addAnyUpdateDocumentListener { updateScale() }
             updateOnMouseWheel(field, .05f)
         }
     }

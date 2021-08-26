@@ -1,5 +1,6 @@
 package be.encelade.viewer.menus
 
+import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Document
@@ -15,6 +16,10 @@ object EventListenerUtils {
             override fun removeUpdate(e: DocumentEvent?) = callback(e!!)
             override fun changedUpdate(e: DocumentEvent?) = callback(e!!)
         })
+    }
+
+    fun JTextField.addAnyUpdateDocumentListener(callback: (DocumentEvent) -> Unit) {
+        this.document.addAnyUpdateDocumentListener(callback)
     }
 
 }
