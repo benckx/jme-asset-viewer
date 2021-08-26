@@ -51,7 +51,6 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         executeWithoutListener {
             listModel.remove(indexOf(id))
             list.clearSelection()
-            list.repaint()
         }
     }
 
