@@ -62,6 +62,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         }
 
         // location of JME windows
+        // this assumes the JME windows appears centered on the screen
         val screenDimension = Toolkit.getDefaultToolkit().screenSize
         val x = ((screenDimension.width - settings.width) / 2)
         val y = ((screenDimension.height - settings.height) / 2)

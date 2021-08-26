@@ -5,7 +5,7 @@ import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
 import javax.swing.JTextField
 
-object GuiUtils {
+internal object GuiUtils {
 
     fun isFloat(value: String): Boolean {
         return try {

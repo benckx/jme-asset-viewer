@@ -5,7 +5,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Document
 
-object EventListenerUtils {
+internal object EventListenerUtils {
 
     /**
      * Syntactic sugar for [DocumentListener] implementation, where callback is identical for all types of updates

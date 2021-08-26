@@ -5,7 +5,7 @@ import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import javax.swing.JTextField
 
-class IncrementValueWheelListener(private val amount: Float) : MouseWheelListener {
+internal class IncrementValueWheelListener(private val amount: Float) : MouseWheelListener {
 
     override fun mouseWheelMoved(e: MouseWheelEvent?) {
         e?.let { _ ->
