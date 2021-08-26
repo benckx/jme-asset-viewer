@@ -1,7 +1,7 @@
 package be.encelade.viewer
 
 import be.encelade.viewer.commands.CommandQueue
-import be.encelade.viewer.menus.AssetMenu
+import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.utils.PropertiesFile
 import javax.swing.UIManager
 

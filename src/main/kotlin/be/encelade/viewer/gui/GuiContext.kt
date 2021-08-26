@@ -1,4 +1,4 @@
-package be.encelade.viewer.menus
+package be.encelade.viewer.gui
 
 import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.utils.PropertiesFile

@@ -1,14 +1,14 @@
-package be.encelade.viewer.menus
+package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.RotationCommand
 import be.encelade.viewer.commands.ScaleCommand
 import be.encelade.viewer.commands.TranslationCommand
-import be.encelade.viewer.menus.EventListenerUtils.addDocumentListener
-import be.encelade.viewer.menus.GuiUtils.allFloats
-import be.encelade.viewer.menus.GuiUtils.isFloat
-import be.encelade.viewer.menus.GuiUtils.toQuaternion
-import be.encelade.viewer.menus.GuiUtils.toVector3f
+import be.encelade.viewer.gui.EventListenerUtils.addDocumentListener
+import be.encelade.viewer.gui.GuiUtils.allFloats
+import be.encelade.viewer.gui.GuiUtils.isFloat
+import be.encelade.viewer.gui.GuiUtils.toQuaternion
+import be.encelade.viewer.gui.GuiUtils.toVector3f
 import com.jme3.math.FastMath
 import com.jme3.scene.Node
 import java.awt.Font

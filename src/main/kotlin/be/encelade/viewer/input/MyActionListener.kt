@@ -1,6 +1,6 @@
 package be.encelade.viewer.input
 
-import be.encelade.viewer.menus.AssetMenu
+import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.SceneNode

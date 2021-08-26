@@ -1,4 +1,4 @@
-package be.encelade.viewer.menus
+package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CloneCommand
 import be.encelade.viewer.commands.CommandQueue

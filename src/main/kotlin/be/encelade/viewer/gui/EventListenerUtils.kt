@@ -1,4 +1,4 @@
-package be.encelade.viewer.menus
+package be.encelade.viewer.gui
 
 import javax.swing.JTextField
 import javax.swing.event.DocumentEvent

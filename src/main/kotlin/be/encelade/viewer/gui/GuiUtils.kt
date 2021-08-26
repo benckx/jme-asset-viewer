@@ -1,4 +1,4 @@
-package be.encelade.viewer.menus
+package be.encelade.viewer.gui
 
 import com.jme3.math.FastMath
 import com.jme3.math.Quaternion

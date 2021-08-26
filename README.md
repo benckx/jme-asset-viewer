@@ -18,6 +18,7 @@ Run the Main file in your favorite IDE. There is no binary runnable yet.
 ### Arguments
 
 - `skip-jme` doesn't show the JME setting window on start-up
+- `no-lighting` doesn't add lights to the scene
 
 ## Navigate the Scene
 

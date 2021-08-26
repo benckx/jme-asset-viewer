@@ -4,10 +4,10 @@ import be.encelade.chimp.material.MaterialDefinitions
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.input.MouseInputManager
 import be.encelade.viewer.input.MyActionListener
 import be.encelade.viewer.input.MyActionListener.Companion.MOUSE_CLICK
-import be.encelade.viewer.menus.AssetMenu
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
@@ -23,7 +23,7 @@ import com.jme3.math.Vector3f
 import com.jme3.shadow.DirectionalLightShadowRenderer
 import kotlin.system.exitProcess
 
-class ViewerJmeApp : SimpleApplication() {
+class ViewerJmeApp(private val lightingEnabled: Boolean) : SimpleApplication() {
 
     private lateinit var cameraManager: CameraManager
 
@@ -35,6 +35,10 @@ class ViewerJmeApp : SimpleApplication() {
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
 
     override fun simpleInitApp() {
+        if (settings.isFullscreen) {
+            throw IllegalArgumentException("The Viewer can not work in fullscreen mode, as you wouldn't see the GUI")
+        }
+
         // init chimp-utils API for materials
         MaterialDefinitions.load(assetManager)
 
@@ -45,7 +49,9 @@ class ViewerJmeApp : SimpleApplication() {
         // build scene
         viewPort.backgroundColor = ColorRGBA("#1c3064")
         rootNode.attachChild(DecorNode())
-        addLighting()
+        if (lightingEnabled) {
+            addLighting()
+        }
 
         // properties
         val propertiesFile = PropertiesFile("preferences.properties")

@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     settings.isGammaCorrection = false
     settings.setResolution(1280, 720)
 
-    val simpleApp = ViewerJmeApp()
+    val simpleApp = ViewerJmeApp(!args.contains("no-lighting"))
     simpleApp.setSettings(settings)
     simpleApp.isShowSettings = !args.contains("skip-jme")
     simpleApp.isPauseOnLostFocus = false
