@@ -6,7 +6,6 @@ import be.encelade.viewer.commands.ScaleCommand
 import be.encelade.viewer.commands.TranslationCommand
 import be.encelade.viewer.gui.EventListenerUtils.addDocumentListener
 import be.encelade.viewer.gui.GuiUtils.allFloats
-import be.encelade.viewer.gui.GuiUtils.isFloat
 import be.encelade.viewer.gui.GuiUtils.toQuaternion
 import be.encelade.viewer.gui.GuiUtils.toVector3f
 import com.jme3.math.FastMath
@@ -76,17 +75,17 @@ internal class AssetCoordinatesPanel(guiFont: Font,
 
         positionFields.forEach { field ->
             field.addDocumentListener { updatePosition() }
-            updateOnMouseWheel(field, .1f)
+            field.addMouseWheelListener(IncrementValueWheelListener(.1f))
         }
 
         rotationFields.forEach { field ->
             field.addDocumentListener { updateRotation() }
-            updateOnMouseWheel(field, 1f)
+            field.addMouseWheelListener(IncrementValueWheelListener(1f))
         }
 
         scaleFields.forEach { field ->
             field.addDocumentListener { updateScale() }
-            updateOnMouseWheel(field, .05f)
+            field.addMouseWheelListener(IncrementValueWheelListener(.05f))
         }
     }
 
@@ -114,18 +113,6 @@ internal class AssetCoordinatesPanel(guiFont: Font,
             }
         }
 
-    }
-
-    // TODO: move to EventListenerUtils
-    private fun updateOnMouseWheel(field: JTextField, amount: Float) {
-        field.addMouseWheelListener { e ->
-            if (isFloat(field)) {
-                val value = field.text.toFloat()
-                val delta = e.wheelRotation * amount * -1f
-                val newValue = value + delta
-                field.text = newValue.toString()
-            }
-        }
     }
 
     internal fun show(node: Node) {
