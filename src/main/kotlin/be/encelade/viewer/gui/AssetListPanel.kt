@@ -69,6 +69,7 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         }
     }
 
+    // TODO: can be replaced by a simple Boolean
     private fun executeWithoutListener(callback: () -> Unit) {
         list.removeListSelectionListener(selectionListener)
         callback()
