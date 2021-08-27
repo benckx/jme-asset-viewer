@@ -41,3 +41,24 @@ https://github.com/benckx/ouistiti
 ```
  ./gradlew dependencyUpdates --refresh-dependencies
 ```
+
+# Known Issues
+
+## File Selection on Linux
+
+```
+X Error of failed request:  BadWindow (invalid Window parameter)
+  Major opcode of failed request:  20 (X_GetProperty)
+  Resource id in failed request:  0x9c0007c
+  Serial number of failed request:  2511
+  Current serial number in output stream:  2511
+```
+
+It doesn't happen when only the GUI is loaded.
+
+# Related Projects
+
+* **ouistiti**: A basic camera system for management game:<br/>
+  https://github.com/benckx/ouistiti
+* **chimp-utils**: Collection Kotlin of APIs and Helper:<br/>
+  https://github.com/benckx/chimp-utils
