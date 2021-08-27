@@ -9,7 +9,6 @@ import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import javax.swing.*
-import javax.swing.event.ListSelectionListener
 
 internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent: AssetMenu) : JPanel(), LazyLogging {
 
@@ -17,15 +16,7 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     private val list = JList(listModel)
     private val scrollPane = JScrollPane(list)
 
-    private val selectionListener = ListSelectionListener { e ->
-        if (!e.valueIsAdjusting) {
-            list.selectedValue?.let { sceneNode ->
-                commandQueue.queue(SelectAssetCommand(sceneNode) {
-                    parent.show(sceneNode, showInList = false)
-                })
-            }
-        }
-    }
+    private var isListenerEnabled = true
 
     init {
         list.cellRenderer = AssetNodeRenderer()
@@ -40,7 +31,15 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         add(titleLabel, BorderLayout.NORTH)
         add(scrollPane, BorderLayout.CENTER)
 
-        list.addListSelectionListener(selectionListener)
+        list.addListSelectionListener { e ->
+            if (isListenerEnabled && !e.valueIsAdjusting) {
+                list.selectedValue?.let { sceneNode ->
+                    commandQueue.queue(SelectAssetCommand(sceneNode) {
+                        parent.show(sceneNode, showInList = false)
+                    })
+                }
+            }
+        }
     }
 
     internal fun add(sceneNode: SceneNode) {
@@ -69,11 +68,10 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         }
     }
 
-    // TODO: can be replaced by a simple Boolean
     private fun executeWithoutListener(callback: () -> Unit) {
-        list.removeListSelectionListener(selectionListener)
+        isListenerEnabled = false
         callback()
-        list.addListSelectionListener(selectionListener)
+        isListenerEnabled = true
     }
 
     private fun indexOf(sceneNode: SceneNode): Int {

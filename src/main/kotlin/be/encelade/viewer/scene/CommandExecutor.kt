@@ -32,6 +32,7 @@ class CommandExecutor(app: SimpleApplication,
             logger.debug("executing $command")
             assetNodeManager.clone(command.id)?.let { sceneNode ->
                 sceneNode.node.move(1f, 1f, 0f)
+                boundingBoxManager.drawBoundingBox(sceneNode)
                 command.callback(sceneNode)
             }
         }
