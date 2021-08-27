@@ -83,6 +83,8 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
         inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
         inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
+
+        savedSceneManager.load()
     }
 
     override fun simpleUpdate(tpf: Float) {

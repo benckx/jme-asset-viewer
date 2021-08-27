@@ -39,7 +39,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
     /**
      * Add shadows and id
      */
-    private fun loadAssetSpatial(file: File): Spatial {
+    fun loadAssetSpatial(file: File): Spatial {
         val name = ULID.random()
         val splitPath = file.path.split(File.separator)
         val containingFolder = splitPath.dropLast(1).joinToString(File.separator)
