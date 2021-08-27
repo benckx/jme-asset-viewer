@@ -36,6 +36,11 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         return SceneNode(assetNode, node)
     }
 
+    fun add(sceneNode: SceneNode) {
+        assetNodes += sceneNode.assetNode
+        rootNode.attachChild(sceneNode.node)
+    }
+
     /**
      * Add shadows and id
      */

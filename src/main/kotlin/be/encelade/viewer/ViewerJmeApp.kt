@@ -38,13 +38,12 @@ class ViewerJmeApp(private val properties: PropertiesFile,
     private val mouseInputManager = MouseInputManager(this)
     private val assetNodeManager = AssetNodeManager(this)
     private val boundingBoxManager = BoundingBoxManager(this)
+    private lateinit var saveSceneAccumulator: TpfAccumulator
 
     private val commandQueue = CommandQueue()
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
-    private lateinit var assetMenu: AssetMenu
 
-    private val savedSceneManager = SavedSceneManager(assetNodeManager)
-    private val saveSceneAccumulator = TpfAccumulator(0.20f) { savedSceneManager.persist() }
+    private lateinit var assetMenu: AssetMenu
 
     override fun simpleInitApp() {
         if (settings.isFullscreen) {
@@ -84,7 +83,12 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
         inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
 
-        savedSceneManager.load()
+        // persistence
+        val savedSceneManager = SavedSceneManager(assetNodeManager, assetMenu)
+        saveSceneAccumulator = TpfAccumulator(0.20f) { savedSceneManager.persistToFile() }
+
+        // re-load if exists
+        savedSceneManager.loadFromFile()
     }
 
     override fun simpleUpdate(tpf: Float) {

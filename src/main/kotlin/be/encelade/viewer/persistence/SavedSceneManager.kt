@@ -1,5 +1,7 @@
 package be.encelade.viewer.persistence
 
+import be.encelade.viewer.gui.AssetMenu
+import be.encelade.viewer.scene.AssetNode
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
@@ -7,21 +9,22 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.jme3.scene.Node
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.concurrent.thread
 import kotlin.text.Charsets.UTF_8
 
-
-class SavedSceneManager(private val assetNodeManager: AssetNodeManager) : LazyLogging {
+class SavedSceneManager(private val assetNodeManager: AssetNodeManager,
+                        private val assetMenu: AssetMenu) : LazyLogging {
 
     private val jsonMapper = ObjectMapper()
             .registerModule(KotlinModule())
             .registerModule(JmeModule())
             .configure(INDENT_OUTPUT, true)
 
-    fun persist() {
+    fun persistToFile() {
         val dtos = assetNodeManager
                 .listAllSceneNodes()
                 .map { sceneNode -> toDto(sceneNode) }
@@ -33,16 +36,21 @@ class SavedSceneManager(private val assetNodeManager: AssetNodeManager) : LazyLo
         }
     }
 
-    fun load() {
+    fun loadFromFile() {
         val savedSceneFile = File(SAVED_SCENE_FILE_NAME)
         if (savedSceneFile.exists()) {
             val json = Files.readAllLines(Paths.get(SAVED_SCENE_FILE_NAME)).joinToString("\n")
             val typeRef = object : TypeReference<List<SceneNodeDto>>() {}
-            val sceneNodeDtos = jsonMapper.readValue(json, typeRef)!!
+            jsonMapper.readValue(json, typeRef)!!
+                    .map { dto -> fromDto(dto) }
+                    .forEach { sceneNode ->
+                        assetNodeManager.add(sceneNode)
+                        assetMenu.addToAssetList(sceneNode)
+                    }
         }
     }
 
-    fun toDto(sceneNode: SceneNode): SceneNodeDto {
+    private fun toDto(sceneNode: SceneNode): SceneNodeDto {
         return SceneNodeDto(
                 sceneNode.id(),
                 sceneNode.assetNode.file.absolutePath,
@@ -51,9 +59,20 @@ class SavedSceneManager(private val assetNodeManager: AssetNodeManager) : LazyLo
                 sceneNode.node.localScale)
     }
 
-    fun fromDto(sceneNodeDto: SceneNodeDto) {
+    private fun fromDto(sceneNodeDto: SceneNodeDto): SceneNode {
         val file = File(sceneNodeDto.fileName)
+        val assetNode = AssetNode(sceneNodeDto.id, file)
+
         val spatial = assetNodeManager.loadAssetSpatial(file)
+        spatial.name = sceneNodeDto.id
+
+        val node = Node(sceneNodeDto.id)
+        node.attachChild(spatial)
+        node.localTranslation = sceneNodeDto.translation
+        node.localRotation = sceneNodeDto.rotation
+        node.localScale = sceneNodeDto.scale
+
+        return SceneNode(assetNode, node)
     }
 
     private companion object {
