@@ -6,7 +6,7 @@ import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.input.MouseClickActionListener
-import be.encelade.viewer.input.MouseClickActionListener.Companion.MOUSE_CLICK
+import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
 import be.encelade.viewer.input.MouseInputManager
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
@@ -77,8 +77,8 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
-        inputManager.addListener(mouseClickActionListener, MOUSE_CLICK)
-        inputManager.addMapping(MOUSE_CLICK, MouseButtonTrigger(BUTTON_LEFT))
+        inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
+        inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
     }
 
     override fun simpleUpdate(tpf: Float) {

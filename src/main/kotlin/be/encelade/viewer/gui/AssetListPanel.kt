@@ -28,11 +28,14 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
     }
 
     init {
-        layout = BorderLayout()
         list.cellRenderer = AssetNodeRenderer()
 
-        val titleLabel = JLabel("Scene Assets:")
-        titleLabel.font = guiFont
+        layout = BorderLayout()
+        border = BorderFactory.createEmptyBorder(7, 5, 7, 5)
+
+        val titleLabel = JLabel("Scene Assets")
+        titleLabel.border = BorderFactory.createEmptyBorder(0, 0, 3, 0)
+        titleLabel.font = guiFont.deriveFont(Font.BOLD)
 
         add(titleLabel, BorderLayout.NORTH)
         add(scrollPane, BorderLayout.CENTER)

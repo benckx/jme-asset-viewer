@@ -8,6 +8,10 @@ import be.encelade.viewer.utils.LazyLogging
 import com.jme3.input.controls.ActionListener
 import com.jme3.scene.Node
 
+/**
+ * Detect on which [be.encelade.viewer.scene.AssetNode] user has clicked,
+ * and focus it in the scene and in the GUI.
+ */
 class MouseClickActionListener(private val rootNode: Node,
                                private val mouseInputManager: MouseInputManager,
                                private val assetNodeManager: AssetNodeManager,
@@ -17,7 +21,7 @@ class MouseClickActionListener(private val rootNode: Node,
     override fun onAction(name: String?, isPressed: Boolean, tpf: Float) {
         if (!isPressed) {
             when (name) {
-                MOUSE_CLICK -> {
+                LEFT_CLICK -> {
                     val sceneNode = findSceneNode()
                     if (sceneNode != null) {
                         assetMenu.show(sceneNode)
@@ -48,7 +52,7 @@ class MouseClickActionListener(private val rootNode: Node,
 
     companion object {
 
-        const val MOUSE_CLICK = "MOUSE_CLICK"
+        const val LEFT_CLICK = "LEFT_CLICK"
 
     }
 

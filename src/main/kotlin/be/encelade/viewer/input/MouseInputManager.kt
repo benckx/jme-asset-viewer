@@ -4,6 +4,9 @@ import be.encelade.chimp.tpf.TpfReceiver
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.app.SimpleApplication
 
+/**
+ * Detect which [be.encelade.viewer.scene.AssetNode] are mouse-hovered.
+ */
 class MouseInputManager(app: SimpleApplication) : TpfReceiver, LazyLogging {
 
     private val collisionsDetector = CursorCollisionsDetector(app)

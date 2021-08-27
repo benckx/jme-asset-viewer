@@ -15,5 +15,5 @@ fun main() {
 
     val propertiesFile = PropertiesFile(PROPERTIES_FILE)
     val commandQueue = CommandQueue()
-    AssetMenu(propertiesFile, commandQueue, Point(500, 500))
+    AssetMenu(propertiesFile, commandQueue, Point(800, 600))
 }
