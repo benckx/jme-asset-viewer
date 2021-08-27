@@ -22,8 +22,8 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
         title = defaultTitle
         isResizable = true
 
-        val height = 600
-        val width = 350
+        val height = 700
+        val width = 340
         val margin = 40
         val x = jmeLocation.x - width - margin
         val y = jmeLocation.y

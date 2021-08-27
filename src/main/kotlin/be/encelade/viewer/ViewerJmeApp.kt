@@ -12,7 +12,6 @@ import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
 import be.encelade.viewer.scene.DecorNode
-import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesKey.HEIGHT
 import be.encelade.viewer.utils.PropertiesKey.WIDTH
@@ -29,7 +28,8 @@ import java.awt.Toolkit
 import kotlin.system.exitProcess
 
 class ViewerJmeApp(private val properties: PropertiesFile,
-                   private val lightingEnabled: Boolean) : SimpleApplication(), LazyLogging {
+                   private val lightingEnabled: Boolean) :
+        SimpleApplication() {
 
     private lateinit var cameraManager: CameraManager
 
