@@ -5,6 +5,9 @@ import com.jme3.collision.CollisionResults
 import com.jme3.math.Ray
 import com.jme3.math.Vector2f
 
+/**
+ * Detect which [com.jme3.scene.Geometry] are mouse-hovered.
+ */
 class CursorCollisionsDetector(app: SimpleApplication) {
 
     private val rootNode by lazy { app.rootNode }
