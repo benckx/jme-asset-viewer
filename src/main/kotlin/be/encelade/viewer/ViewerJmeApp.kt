@@ -1,6 +1,7 @@
 package be.encelade.viewer
 
 import be.encelade.chimp.material.MaterialDefinitions
+import be.encelade.chimp.tpf.TpfAccumulator
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
@@ -8,6 +9,7 @@ import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.input.MouseClickActionListener
 import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
 import be.encelade.viewer.input.MouseInputManager
+import be.encelade.viewer.persistence.SavedSceneManager
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
@@ -39,8 +41,10 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
     private val commandQueue = CommandQueue()
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
-
     private lateinit var assetMenu: AssetMenu
+
+    private val savedSceneManager = SavedSceneManager(assetNodeManager)
+    private val saveSceneAccumulator = TpfAccumulator(0.20f) { savedSceneManager.persist() }
 
     override fun simpleInitApp() {
         if (settings.isFullscreen) {
@@ -85,6 +89,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
         commandExecutor.simpleUpdate(tpf)
+        saveSceneAccumulator.simpleUpdate(tpf)
     }
 
     override fun destroy() {

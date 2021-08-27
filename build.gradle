@@ -17,9 +17,10 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-def jmeVersion = "3.3.2-stable"
+def jmeVersion = "3.4.0-stable"
 def chimpUtilsVersion = "1.6.1"
 def ouistitiVersion = "2.0"
+def jacksonVersion = "2.12.4"
 
 dependencies {
     // Kotlin
@@ -44,4 +45,8 @@ dependencies {
     // utils
     compile "org.apache.commons:commons-text:1.9"
     compile "com.github.guepardoapps:kulid:1.1.2.0"
+
+    // persistence
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
 }

@@ -98,4 +98,18 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         }
     }
 
+    fun listAllSceneNodes(): List<SceneNode> {
+        val assetNodes = assetNodes.toList()
+        val allNodes = rootNode.children.filterIsInstance<Node>()
+        val result = mutableListOf<SceneNode>()
+
+        assetNodes.forEach { assetNode ->
+            allNodes.find { it.name == assetNode.id }?.let { node ->
+                result += SceneNode(assetNode, node)
+            }
+        }
+
+        return result.toList()
+    }
+
 }
