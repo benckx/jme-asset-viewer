@@ -6,8 +6,8 @@
 
 3D assets made in Blender don't always appear as expected in jMonkeyEngine games.
 
-I made this tool to help smooth the work between 3D designers and developers, by providing 3D designers a simple GUI to
-quickly test assets in a jMonkeyEngine scene and change their settings at runtime.
+This tool is to help smooth work between 3D designers and developers, by providing 3D designers a simple GUI to quickly
+test assets in a jMonkeyEngine scene and change their settings at runtime.
 
 # How To
 
@@ -66,5 +66,5 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
 
 * **ouistiti**: A basic camera system for management game:<br/>
   https://github.com/benckx/ouistiti
-* **chimp-utils**: Collection Kotlin of APIs and Helper:<br/>
+* **chimp-utils**: Collection of Kotlin APIs and Helper for jMonkeyEngine:<br/>
   https://github.com/benckx/chimp-utils
