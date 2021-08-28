@@ -13,7 +13,8 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
 
 ## Run
 
-Run the Main file in your favorite IDE. There is no binary runnable yet.
+* **From the zip file:** Uncompress and simply run the bat file `viewer.bat`
+* **From source code:** Run the Main file in your favorite IDE.
 
 ### Arguments
 
@@ -26,9 +27,7 @@ Run the Main file in your favorite IDE. There is no binary runnable yet.
 - Zoom in and out with mouse wheel
 - Rotate with B and N or by pressing Left Control when moving with right-click
 
-The app uses the *ouistiti* camera manager, check README for more information:
-
-https://github.com/benckx/ouistiti
+The app uses the [*ouistiti* camera manager library](https://github.com/benckx/ouistiti).
 
 ## Build
 
