@@ -21,7 +21,7 @@ class CommandExecutor(app: SimpleApplication,
             val sceneNode = assetNodeManager.importAsset(command.file)
             boundingBoxManager.drawBoundingBox(sceneNode)
             command.callback(sceneNode)
-            savedSceneWriter.persistToFile()
+            savedSceneWriter.requestWriteToFile()
         }
 
         commandQueue.flushDeleteCommands().forEach { command ->
@@ -29,7 +29,7 @@ class CommandExecutor(app: SimpleApplication,
             assetNodeManager.delete(command.id)
             boundingBoxManager.deleteBoundingBox()
             command.callback()
-            savedSceneWriter.persistToFile()
+            savedSceneWriter.requestWriteToFile()
         }
 
         commandQueue.flushCloneCommands().forEach { command ->
@@ -38,7 +38,7 @@ class CommandExecutor(app: SimpleApplication,
                 sceneNode.node.move(1f, 1f, 0f)
                 boundingBoxManager.drawBoundingBox(sceneNode)
                 command.callback(sceneNode)
-                savedSceneWriter.persistToFile()
+                savedSceneWriter.requestWriteToFile()
             }
         }
 
@@ -53,7 +53,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localTranslation = command.translation
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
-                savedSceneWriter.persistToFile()
+                savedSceneWriter.requestWriteToFile()
             }
         }
 
@@ -62,7 +62,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localRotation = command.rotation
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
-                savedSceneWriter.persistToFile()
+                savedSceneWriter.requestWriteToFile()
             }
         }
 
@@ -71,7 +71,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localScale = command.toVector3f()
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
-                savedSceneWriter.persistToFile()
+                savedSceneWriter.requestWriteToFile()
             }
         }
     }

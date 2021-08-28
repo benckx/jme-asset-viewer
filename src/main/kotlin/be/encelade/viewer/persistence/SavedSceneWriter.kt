@@ -1,5 +1,7 @@
 package be.encelade.viewer.persistence
 
+import be.encelade.chimp.tpf.TpfAccumulable
+import be.encelade.chimp.tpf.TpfAccumulator
 import be.encelade.viewer.SAVED_SCENE_FILE_NAME
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.SceneNode
@@ -13,14 +15,27 @@ import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 import kotlin.text.Charsets.UTF_8
 
-class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLogging {
+class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLogging, TpfAccumulable {
 
     private val jsonMapper = ObjectMapper()
             .registerModule(KotlinModule())
             .registerModule(JmeModule())
             .configure(INDENT_OUTPUT, true)
 
-    fun persistToFile() {
+    private var needPersist = false
+
+    override val tpfAccumulator = TpfAccumulator(0.50f) {
+        writeToFile()
+    }
+
+    /**
+     * Schedule a persist operation, that will be done async (in 2 sec. max).
+     */
+    fun requestWriteToFile() {
+        needPersist = true
+    }
+
+    private fun writeToFile() {
         val sceneNodeDTOs = assetNodeManager
                 .listAllSceneNodes()
                 .map { sceneNode -> toDto(sceneNode) }
@@ -33,6 +48,7 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLog
                 Files.write(Paths.get(SAVED_SCENE_FILE_NAME), json.toByteArray(UTF_8))
             }
             logger.info("persisted to $SAVED_SCENE_FILE_NAME in $millis ms.")
+            needPersist = false
         }
     }
 

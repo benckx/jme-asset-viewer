@@ -25,6 +25,7 @@ class SavedSceneReader(private val assetNodeManager: AssetNodeManager,
                     .nodes
                     .forEach { sceneNodeDto ->
                         val file = File(sceneNodeDto.fileName)
+                        logger.info("loading $file...")
                         if (file.exists()) {
                             val sceneNode = assetNodeManager.importAsset(file)
                             sceneNode.node.localTranslation = sceneNodeDto.translation

@@ -91,6 +91,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
         commandExecutor.simpleUpdate(tpf)
+        savedSceneWriter.simpleUpdate(tpf)
     }
 
     override fun destroy() {
