@@ -5,16 +5,15 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.DeleteAssetNodeCommand
 import be.encelade.viewer.commands.ImportAssetCommand
 import be.encelade.viewer.gui.GuiUtils.buildFileChooser
+import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.utils.LazyLogging
-import java.awt.Font
 import java.awt.GridLayout
 import java.io.File
 import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JPanel
 
-internal class AssetButtonPanel(guiFont: Font,
-                                commandQueue: CommandQueue,
+internal class AssetButtonPanel(commandQueue: CommandQueue,
                                 private val context: GuiContext,
                                 parent: AssetMenu) : JPanel(), LazyLogging {
 

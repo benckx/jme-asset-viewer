@@ -8,18 +8,17 @@ import be.encelade.viewer.gui.EventListenerUtils.addDocumentListener
 import be.encelade.viewer.gui.GuiUtils.allFloats
 import be.encelade.viewer.gui.GuiUtils.copy
 import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
+import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.gui.GuiUtils.toQuaternion
 import be.encelade.viewer.gui.GuiUtils.toVector3f
 import com.jme3.math.FastMath
 import com.jme3.scene.Node
-import java.awt.Font
 import java.awt.GridLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
-internal class AssetCoordinatesPanel(guiFont: Font,
-                                     private val commandQueue: CommandQueue,
+internal class AssetCoordinatesPanel(private val commandQueue: CommandQueue,
                                      private val context: GuiContext) : JPanel() {
 
     private val xPosField = JTextField("0.0")

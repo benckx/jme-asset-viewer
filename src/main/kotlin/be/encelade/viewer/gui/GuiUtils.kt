@@ -3,6 +3,7 @@ package be.encelade.viewer.gui
 import com.jme3.math.FastMath
 import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
+import java.awt.Font
 import java.io.File
 import javax.swing.BorderFactory
 import javax.swing.JFileChooser
@@ -10,6 +11,8 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
 object GuiUtils {
+
+    val guiFont: Font = Font("Arial", Font.PLAIN, 17)
 
     fun createDefaultPanelBorder(): EmptyBorder {
         return createEmptyBorder(left = 5, right = 5)

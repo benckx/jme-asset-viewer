@@ -5,18 +5,15 @@ import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import java.awt.BorderLayout
-import java.awt.Font
 import java.awt.Point
 import javax.swing.JFrame
 
-class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeLocation: Point) : JFrame(), LazyLogging {
+class AssetMenu(properties: PropertiesFile, commandQueue: CommandQueue, jmeLocation: Point) : JFrame(), LazyLogging {
 
-    private val guiFont = Font("Arial", Font.PLAIN, 17)
-
-    private val context = GuiContext(propertiesFile)
-    private val buttonPanel = AssetButtonPanel(guiFont, commandQueue, context, this)
-    private val assetListPanel = AssetListPanel(guiFont, commandQueue, this)
-    private val coordinatesPanel = AssetCoordinatesPanel(guiFont, commandQueue, context)
+    private val context = GuiContext(properties)
+    private val buttonPanel = AssetButtonPanel(commandQueue, context, this)
+    private val assetListPanel = AssetListPanel(commandQueue, this)
+    private val coordinatesPanel = AssetCoordinatesPanel(commandQueue, context)
 
     init {
         title = defaultTitle
@@ -35,6 +32,8 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
         add(coordinatesPanel, BorderLayout.SOUTH)
 
         defaultCloseOperation = EXIT_ON_CLOSE
+
+        logger.debug("actual width: ${1280 + (width + margin) * 2}")
     }
 
     fun addToAssetList(sceneNode: SceneNode) {

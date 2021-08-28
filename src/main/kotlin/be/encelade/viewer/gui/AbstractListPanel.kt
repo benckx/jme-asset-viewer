@@ -4,12 +4,13 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.GuiUtils.copy
 import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
 import be.encelade.viewer.gui.GuiUtils.createEmptyBorder
+import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.*
 
-internal abstract class AbstractListPanel<T>(guiFont: Font, title: String, protected val commandQueue: CommandQueue) :
+internal abstract class AbstractListPanel<T>(title: String, protected val commandQueue: CommandQueue) :
         JPanel(), LazyLogging {
 
     protected val listModel = DefaultListModel<T>()
@@ -19,7 +20,6 @@ internal abstract class AbstractListPanel<T>(guiFont: Font, title: String, prote
     private var isListenerEnabled = true
 
     abstract fun renderItemName(value: T): String
-    abstract fun onSelect(value: T)
     abstract fun indexOf(value: T): Int
     abstract fun indexOf(id: String): Int
 
@@ -43,6 +43,10 @@ internal abstract class AbstractListPanel<T>(guiFont: Font, title: String, prote
                 list.selectedValue?.let { value -> onSelect(value) }
             }
         }
+    }
+
+    open fun onSelect(value: T) {
+        logger.debug("$value selected")
     }
 
     internal fun add(value: T) {
@@ -71,7 +75,7 @@ internal abstract class AbstractListPanel<T>(guiFont: Font, title: String, prote
         }
     }
 
-    protected fun executeWithoutListener(callback: () -> Unit) {
+    private fun executeWithoutListener(callback: () -> Unit) {
         isListenerEnabled = false
         callback()
         isListenerEnabled = true

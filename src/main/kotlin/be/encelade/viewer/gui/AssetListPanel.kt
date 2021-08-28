@@ -3,10 +3,9 @@ package be.encelade.viewer.gui
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.SelectAssetCommand
 import be.encelade.viewer.scene.SceneNode
-import java.awt.Font
 
-internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, private val parent: AssetMenu) :
-        AbstractListPanel<SceneNode>(guiFont, "Scene Asset", commandQueue) {
+internal class AssetListPanel(commandQueue: CommandQueue, private val parent: AssetMenu) :
+        AbstractListPanel<SceneNode>("Scene Asset", commandQueue) {
 
     override fun renderItemName(value: SceneNode): String {
         return value.assetNode.fileName

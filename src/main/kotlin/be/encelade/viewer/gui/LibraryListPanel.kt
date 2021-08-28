@@ -1,18 +1,13 @@
 package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CommandQueue
-import java.awt.Font
 import java.io.File
 
-internal class LibraryListPanel(guiFont: Font, commandQueue: CommandQueue) :
-        AbstractListPanel<File>(guiFont, "Library", commandQueue) {
+internal class LibraryListPanel(commandQueue: CommandQueue) :
+        AbstractListPanel<File>("Asset Library", commandQueue) {
 
     override fun renderItemName(value: File): String {
         return value.name
-    }
-
-    override fun onSelect(value: File) {
-        println("NOTHING: selected $value")
     }
 
     override fun indexOf(value: File): Int {

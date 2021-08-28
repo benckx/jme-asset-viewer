@@ -5,6 +5,7 @@ import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
+import be.encelade.viewer.gui.LibraryMenu
 import be.encelade.viewer.input.MouseClickActionListener
 import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
 import be.encelade.viewer.input.MouseInputManager
@@ -44,6 +45,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager, savedSceneWriter)
 
     private lateinit var assetMenu: AssetMenu
+    private lateinit var libraryMenu: LibraryMenu
 
     override fun simpleInitApp() {
         if (settings.isFullscreen) {
@@ -69,7 +71,9 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         }
 
         // input and GUI
-        assetMenu = AssetMenu(properties, commandQueue, findLocationOfJmeWindows())
+        val jmeWindowLocation = findLocationOfJmeWindow()
+        assetMenu = AssetMenu(properties, commandQueue, jmeWindowLocation)
+        libraryMenu = LibraryMenu(properties, commandQueue, jmeWindowLocation)
 
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
@@ -81,6 +85,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
         // show GUI
         assetMenu.isVisible = true
+        libraryMenu.isVisible = true
     }
 
     override fun simpleUpdate(tpf: Float) {
@@ -120,7 +125,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
     /**
      * Location of JME windows. This assumes the JME windows appears centered on the screen.
      */
-    private fun findLocationOfJmeWindows(): Point {
+    private fun findLocationOfJmeWindow(): Point {
         val screenDimension = Toolkit.getDefaultToolkit().screenSize
         val x = ((screenDimension.width - settings.width) / 2)
         val y = ((screenDimension.height - settings.height) / 2)
