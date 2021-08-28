@@ -26,7 +26,7 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
         val width = 280
         val margin = 20
         val x = jmeLocation.x - width - margin
-        val y = jmeLocation.y - 40
+        val y = jmeLocation.y - 60
         setBounds(x, y, width, height)
 
         layout = BorderLayout()
@@ -34,7 +34,6 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
         add(assetListPanel, BorderLayout.CENTER)
         add(coordinatesPanel, BorderLayout.SOUTH)
 
-        isVisible = true
         defaultCloseOperation = EXIT_ON_CLOSE
     }
 

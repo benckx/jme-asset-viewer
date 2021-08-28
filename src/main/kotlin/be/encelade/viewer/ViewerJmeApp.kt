@@ -50,16 +50,6 @@ class ViewerJmeApp(private val properties: PropertiesFile,
             throw IllegalArgumentException("The Viewer can not work in fullscreen mode, as you wouldn't see the GUI")
         }
 
-        // location of JME windows
-        // this assumes the JME windows appears centered on the screen
-        val screenDimension = Toolkit.getDefaultToolkit().screenSize
-        val x = ((screenDimension.width - settings.width) / 2)
-        val y = ((screenDimension.height - settings.height) / 2)
-        val jmeLocation = Point(x, y)
-
-        // input and GUI
-        assetMenu = AssetMenu(properties, commandQueue, jmeLocation)
-
         // persist selected dimension
         properties.persistProperty(WIDTH, settings.width.toString())
         properties.persistProperty(HEIGHT, settings.height.toString())
@@ -78,6 +68,9 @@ class ViewerJmeApp(private val properties: PropertiesFile,
             addLighting()
         }
 
+        // input and GUI
+        assetMenu = AssetMenu(properties, commandQueue, findLocationOfJmeWindows())
+
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
         inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
@@ -85,6 +78,9 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
         // re-load if exists
         SavedSceneReader(assetNodeManager, assetMenu).loadFromFile()
+
+        // show GUI
+        assetMenu.isVisible = true
     }
 
     override fun simpleUpdate(tpf: Float) {
@@ -119,6 +115,16 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         val al = AmbientLight()
         al.color = White.mult(0.12f)
         rootNode.addLight(al)
+    }
+
+    /**
+     * Location of JME windows. This assumes the JME windows appears centered on the screen.
+     */
+    private fun findLocationOfJmeWindows(): Point {
+        val screenDimension = Toolkit.getDefaultToolkit().screenSize
+        val x = ((screenDimension.width - settings.width) / 2)
+        val y = ((screenDimension.height - settings.height) / 2)
+        return Point(x, y)
     }
 
 }
