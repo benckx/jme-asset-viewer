@@ -64,7 +64,7 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
 
 # Related Projects
 
-* **ouistiti**: A basic camera system for management game:<br/>
+* **ouistiti**: A basic camera manager for management/strategy games:<br/>
   https://github.com/benckx/ouistiti
-* **chimp-utils**: Collection of Kotlin APIs and Helper for jMonkeyEngine:<br/>
+* **chimp-utils**: A collection of Kotlin APIs and helpers for jMonkeyEngine:<br/>
   https://github.com/benckx/chimp-utils
