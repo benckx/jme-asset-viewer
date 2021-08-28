@@ -2,6 +2,7 @@ package be.encelade.viewer.scene
 
 import be.encelade.chimp.tpf.TpfReceiver
 import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.persistence.SavedSceneWriter
 import be.encelade.viewer.utils.LazyLogging
 import com.jme3.app.SimpleApplication
 import com.jme3.scene.Node
@@ -9,7 +10,8 @@ import com.jme3.scene.Node
 class CommandExecutor(app: SimpleApplication,
                       private val commandQueue: CommandQueue,
                       private val assetNodeManager: AssetNodeManager,
-                      private val boundingBoxManager: BoundingBoxManager) : TpfReceiver, LazyLogging {
+                      private val boundingBoxManager: BoundingBoxManager,
+                      private val savedSceneWriter: SavedSceneWriter) : TpfReceiver, LazyLogging {
 
     private val rootNode by lazy { app.rootNode }
 
@@ -19,6 +21,7 @@ class CommandExecutor(app: SimpleApplication,
             val sceneNode = assetNodeManager.importAsset(command.file)
             boundingBoxManager.drawBoundingBox(sceneNode)
             command.callback(sceneNode)
+            savedSceneWriter.persistToFile()
         }
 
         commandQueue.flushDeleteCommands().forEach { command ->
@@ -26,6 +29,7 @@ class CommandExecutor(app: SimpleApplication,
             assetNodeManager.delete(command.id)
             boundingBoxManager.deleteBoundingBox()
             command.callback()
+            savedSceneWriter.persistToFile()
         }
 
         commandQueue.flushCloneCommands().forEach { command ->
@@ -34,6 +38,7 @@ class CommandExecutor(app: SimpleApplication,
                 sceneNode.node.move(1f, 1f, 0f)
                 boundingBoxManager.drawBoundingBox(sceneNode)
                 command.callback(sceneNode)
+                savedSceneWriter.persistToFile()
             }
         }
 
@@ -48,6 +53,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localTranslation = command.translation
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
+                savedSceneWriter.persistToFile()
             }
         }
 
@@ -56,6 +62,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localRotation = command.rotation
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
+                savedSceneWriter.persistToFile()
             }
         }
 
@@ -64,6 +71,7 @@ class CommandExecutor(app: SimpleApplication,
             rootNode.getChild(command.id)?.let { spatial ->
                 spatial.localScale = command.toVector3f()
                 boundingBoxManager.reDrawBoundingBox(spatial as Node)
+                savedSceneWriter.persistToFile()
             }
         }
     }

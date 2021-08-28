@@ -16,6 +16,8 @@ const val PROPERTIES_FILE = "preferences.properties"
 const val DEFAULT_WIDTH = 1280
 const val DEFAULT_HEIGHT = 720
 
+const val SAVED_SCENE_FILE_NAME = "scene.json"
+
 private val logger = LoggerFactory.getLogger("Main")
 private val properties = PropertiesFile(PROPERTIES_FILE)
 

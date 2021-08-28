@@ -1,7 +1,6 @@
 package be.encelade.viewer
 
 import be.encelade.chimp.material.MaterialDefinitions
-import be.encelade.chimp.tpf.TpfAccumulator
 import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
@@ -9,7 +8,8 @@ import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.input.MouseClickActionListener
 import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
 import be.encelade.viewer.input.MouseInputManager
-import be.encelade.viewer.persistence.SavedSceneManager
+import be.encelade.viewer.persistence.SavedSceneReader
+import be.encelade.viewer.persistence.SavedSceneWriter
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.scene.BoundingBoxManager
 import be.encelade.viewer.scene.CommandExecutor
@@ -38,10 +38,10 @@ class ViewerJmeApp(private val properties: PropertiesFile,
     private val mouseInputManager = MouseInputManager(this)
     private val assetNodeManager = AssetNodeManager(this)
     private val boundingBoxManager = BoundingBoxManager(this)
-    private lateinit var saveSceneAccumulator: TpfAccumulator
+    private val savedSceneWriter = SavedSceneWriter(assetNodeManager)
 
     private val commandQueue = CommandQueue()
-    private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager)
+    private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager, savedSceneWriter)
 
     private lateinit var assetMenu: AssetMenu
 
@@ -83,19 +83,14 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
         inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
 
-        // persistence
-        val savedSceneManager = SavedSceneManager(assetNodeManager, assetMenu)
-        saveSceneAccumulator = TpfAccumulator(0.20f) { savedSceneManager.persistToFile() }
-
         // re-load if exists
-        savedSceneManager.loadFromFile()
+        SavedSceneReader(assetNodeManager, assetMenu).loadFromFile()
     }
 
     override fun simpleUpdate(tpf: Float) {
         cameraManager.simpleUpdate(tpf)
         mouseInputManager.simpleUpdate(tpf)
         commandExecutor.simpleUpdate(tpf)
-        saveSceneAccumulator.simpleUpdate(tpf)
     }
 
     override fun destroy() {
