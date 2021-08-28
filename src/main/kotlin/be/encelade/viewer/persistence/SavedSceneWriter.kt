@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.concurrent.thread
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis
 import kotlin.text.Charsets.UTF_8
 
@@ -22,17 +22,19 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLog
             .registerModule(JmeModule())
             .configure(INDENT_OUTPUT, true)
 
-    private var needPersist = false
+    private var mustWrite = AtomicBoolean(false)
 
     override val tpfAccumulator = TpfAccumulator(0.50f) {
-        writeToFile()
+        if (mustWrite.get()) {
+            writeToFile()
+        }
     }
 
     /**
      * Schedule a persist operation, that will be done async (in 2 sec. max).
      */
     fun requestWriteToFile() {
-        needPersist = true
+        mustWrite.set(true)
     }
 
     private fun writeToFile() {
@@ -41,15 +43,12 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLog
                 .map { sceneNode -> toDto(sceneNode) }
 
         val sceneDTO = SceneDto(sceneNodeDTOs)
-
-        thread {
-            val millis = measureTimeMillis {
-                val json = jsonMapper.writeValueAsString(sceneDTO)
-                Files.write(Paths.get(SAVED_SCENE_FILE_NAME), json.toByteArray(UTF_8))
-            }
-            logger.info("persisted to $SAVED_SCENE_FILE_NAME in $millis ms.")
-            needPersist = false
+        val millis = measureTimeMillis {
+            val json = jsonMapper.writeValueAsString(sceneDTO)
+            Files.write(Paths.get(SAVED_SCENE_FILE_NAME), json.toByteArray(UTF_8))
         }
+        logger.info("scene saved to $SAVED_SCENE_FILE_NAME in $millis ms.")
+        mustWrite.set(false)
     }
 
     private fun toDto(sceneNode: SceneNode): SceneNodeDto {
