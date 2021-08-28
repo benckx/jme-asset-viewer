@@ -22,8 +22,8 @@ class DecorNode : Node("DECOR") {
 
     private companion object {
 
-        const val sizeX = 24
-        const val sizeY = 18
+        const val sizeX = 30
+        const val sizeY = 20
 
         fun makeFloor(): Geometry {
             val floorMat = UnshadedMaterial()
