@@ -2,6 +2,9 @@ package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.SelectAssetCommand
+import be.encelade.viewer.gui.GuiUtils.copy
+import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
+import be.encelade.viewer.gui.GuiUtils.createEmptyBorder
 import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.BorderLayout
@@ -22,10 +25,10 @@ internal class AssetListPanel(guiFont: Font, commandQueue: CommandQueue, parent:
         list.cellRenderer = AssetNodeRenderer()
 
         layout = BorderLayout()
-        border = BorderFactory.createEmptyBorder(7, 5, 7, 5)
+        border = createDefaultPanelBorder().copy(top = 7, bottom = 7)
 
         val titleLabel = JLabel("Scene Assets")
-        titleLabel.border = BorderFactory.createEmptyBorder(0, 0, 3, 0)
+        titleLabel.border = createEmptyBorder(bottom = 3)
         titleLabel.font = guiFont.deriveFont(Font.BOLD)
 
         add(titleLabel, BorderLayout.NORTH)

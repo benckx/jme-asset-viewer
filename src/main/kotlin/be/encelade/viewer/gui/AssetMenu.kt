@@ -23,10 +23,10 @@ class AssetMenu(propertiesFile: PropertiesFile, commandQueue: CommandQueue, jmeL
         isResizable = true
 
         val height = 800
-        val width = 320
-        val margin = 40
+        val width = 280
+        val margin = 20
         val x = jmeLocation.x - width - margin
-        val y = jmeLocation.y - margin
+        val y = jmeLocation.y - 40
         setBounds(x, y, width, height)
 
         layout = BorderLayout()

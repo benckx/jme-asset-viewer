@@ -6,6 +6,8 @@ import be.encelade.viewer.commands.ScaleCommand
 import be.encelade.viewer.commands.TranslationCommand
 import be.encelade.viewer.gui.EventListenerUtils.addDocumentListener
 import be.encelade.viewer.gui.GuiUtils.allFloats
+import be.encelade.viewer.gui.GuiUtils.copy
+import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
 import be.encelade.viewer.gui.GuiUtils.toQuaternion
 import be.encelade.viewer.gui.GuiUtils.toVector3f
 import com.jme3.math.FastMath
@@ -38,6 +40,7 @@ internal class AssetCoordinatesPanel(guiFont: Font,
 
     init {
         layout = GridLayout(0, 2)
+        border = createDefaultPanelBorder().copy(bottom = 4)
 
         val xPosLabel = JLabel("position x:")
         val yPosLabel = JLabel("position y:")

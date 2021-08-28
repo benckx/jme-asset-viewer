@@ -4,10 +4,34 @@ import com.jme3.math.FastMath
 import com.jme3.math.Quaternion
 import com.jme3.math.Vector3f
 import java.io.File
+import javax.swing.BorderFactory
 import javax.swing.JFileChooser
 import javax.swing.JTextField
+import javax.swing.border.EmptyBorder
 
 object GuiUtils {
+
+    fun createDefaultPanelBorder(): EmptyBorder {
+        return createEmptyBorder(left = 5, right = 5)
+    }
+
+    /**
+     * Convenience method with Kotlin named parameters
+     */
+    fun EmptyBorder.copy(top: Int? = null, left: Int? = null, bottom: Int? = null, right: Int? = null): EmptyBorder {
+        val t = top ?: borderInsets.top
+        val l = left ?: borderInsets.left
+        val b = bottom ?: borderInsets.bottom
+        val r = right ?: borderInsets.right
+        return EmptyBorder(t, l, b, r)
+    }
+
+    /**
+     * Convenience method with Kotlin named parameters
+     */
+    fun createEmptyBorder(top: Int = 0, left: Int = 0, bottom: Int = 0, right: Int = 0): EmptyBorder {
+        return BorderFactory.createEmptyBorder(top, left, bottom, right) as EmptyBorder
+    }
 
     fun buildFileChooser(defaultFolder: String?): JFileChooser {
         val fileChooser = JFileChooser()
