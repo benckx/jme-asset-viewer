@@ -50,3 +50,22 @@ dependencies {
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
 }
+
+def mainClass = "be.encelade.viewer.MainKt"
+
+jar {
+    setArchivesBaseName("jme-viewer")
+    manifest {
+        attributes 'Main-Class': "$mainClass"
+    }
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    exclude 'org/testng/**'
+    exclude 'org/opentest4j/**'
+    exclude 'module-info.class'
+}
