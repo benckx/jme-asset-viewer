@@ -10,7 +10,8 @@ import java.awt.GridLayout
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.swing.JButton
-import javax.swing.JFileChooser
+import javax.swing.JFileChooser.APPROVE_OPTION
+import javax.swing.JFileChooser.DIRECTORIES_ONLY
 import javax.swing.JPanel
 
 internal class LibraryButtonPanel(context: GuiContext,
@@ -30,9 +31,9 @@ internal class LibraryButtonPanel(context: GuiContext,
 
         scanFolderButton.addActionListener {
             val fileChooser = buildFileChooser(context.lastFolder)
-            fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+            fileChooser.fileSelectionMode = DIRECTORIES_ONLY
             val returnValue = fileChooser.showOpenDialog(scanFolderButton)
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (returnValue == APPROVE_OPTION) {
                 val folder = fileChooser.selectedFile
                 context.lastFolder = folder.absolutePath
 
@@ -54,7 +55,7 @@ internal class LibraryButtonPanel(context: GuiContext,
 
     private companion object {
 
-        val extensions = listOf("obj", "glb", "j3o", "xml", "blend", "fbx")
+        val extensions = listOf("obj", "glb", "j3o", "xml", "fbx")
 
     }
 
