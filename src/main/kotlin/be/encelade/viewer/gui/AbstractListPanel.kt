@@ -48,8 +48,8 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
         }
 
         list.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(evt: MouseEvent) {
-                if (isListenerEnabled && evt.clickCount == 2) {
+            override fun mouseClicked(e: MouseEvent) {
+                if (isListenerEnabled && e.clickCount == 2) {
                     onDoubleClick(list.selectedValue)
                 }
             }

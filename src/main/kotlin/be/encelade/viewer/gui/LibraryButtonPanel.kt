@@ -4,16 +4,20 @@ import be.encelade.viewer.gui.GuiUtils.buildFileChooser
 import be.encelade.viewer.gui.GuiUtils.copy
 import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
 import be.encelade.viewer.gui.GuiUtils.guiFont
+import be.encelade.viewer.persistence.SavedSceneWriter
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.GridLayout
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.stream.Collectors
 import javax.swing.JButton
 import javax.swing.JFileChooser
 import javax.swing.JPanel
 
-internal class LibraryButtonPanel(context: GuiContext, addFileToList: (File) -> Unit) : JPanel(), LazyLogging {
+internal class LibraryButtonPanel(context: GuiContext,
+                                  savedSceneWriter: SavedSceneWriter,
+                                  addFileToList: (File) -> Unit) : JPanel(), LazyLogging {
 
     private val scanFolder = JButton("Scan Folder")
 
@@ -29,13 +33,19 @@ internal class LibraryButtonPanel(context: GuiContext, addFileToList: (File) -> 
             fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
             val returnValue = fileChooser.showOpenDialog(scanFolder)
             if (returnValue == JFileChooser.APPROVE_OPTION) {
-                val file = fileChooser.selectedFile
-                context.lastFolder = file.absolutePath
+                val folder = fileChooser.selectedFile
+                context.lastFolder = folder.absolutePath
 
-                Files.walk(Paths.get(file.path))
-                        .map { it.toFile() }
+                val files: List<File> = Files.walk(Paths.get(folder.path))
+                        .map { path -> path.toFile() }
                         .filter { extensions.contains(it.extension) }
-                        .forEach { addFileToList(it) }
+                        .collect(Collectors.toList())
+                        .toList()
+                        .filterNotNull()
+
+                files.forEach { file -> addFileToList(file) }
+
+                savedSceneWriter.requestWriteToFile()
             }
         }
     }

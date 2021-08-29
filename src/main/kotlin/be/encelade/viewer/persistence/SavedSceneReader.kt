@@ -2,6 +2,7 @@ package be.encelade.viewer.persistence
 
 import be.encelade.viewer.SAVED_SCENE_FILE_NAME
 import be.encelade.viewer.gui.AssetMenu
+import be.encelade.viewer.gui.LibraryMenu
 import be.encelade.viewer.scene.AssetNodeManager
 import be.encelade.viewer.utils.LazyLogging
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -11,7 +12,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 class SavedSceneReader(private val assetNodeManager: AssetNodeManager,
-                       private val assetMenu: AssetMenu) : LazyLogging {
+                       private val assetMenu: AssetMenu,
+                       private val libraryMenu: LibraryMenu) : LazyLogging {
 
     private val jsonMapper = ObjectMapper()
             .registerModule(KotlinModule())
@@ -20,8 +22,9 @@ class SavedSceneReader(private val assetNodeManager: AssetNodeManager,
         val savedSceneFile = File(SAVED_SCENE_FILE_NAME)
         if (savedSceneFile.exists()) {
             val json = Files.readAllLines(Paths.get(SAVED_SCENE_FILE_NAME)).joinToString("\n")
-            jsonMapper
-                    .readValue(json, SceneDto::class.java)!!
+            val savedScene = jsonMapper.readValue(json, SceneDto::class.java)!!
+
+            savedScene
                     .nodes
                     .forEach { sceneNodeDto ->
                         val file = File(sceneNodeDto.fileName)
@@ -37,7 +40,19 @@ class SavedSceneReader(private val assetNodeManager: AssetNodeManager,
                         }
                     }
 
+            savedScene
+                    .libraryFiles
+                    .map { fileName -> File(fileName) }
+                    .forEach { file ->
+                        if (file.exists()) {
+                            libraryMenu.addFileToLibrary(file)
+                        } else {
+                            logger.error("$file does not exist")
+                        }
+                    }
+
             assetMenu.disableFocus()
+            libraryMenu.disableFocus()
         }
     }
 

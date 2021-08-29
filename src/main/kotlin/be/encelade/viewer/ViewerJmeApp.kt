@@ -73,7 +73,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         // input and GUI
         val jmeWindowLocation = findLocationOfJmeWindow()
         assetMenu = AssetMenu(properties, commandQueue, jmeWindowLocation)
-        libraryMenu = LibraryMenu(properties, commandQueue, assetMenu, jmeWindowLocation)
+        libraryMenu = LibraryMenu(properties, commandQueue, savedSceneWriter, assetMenu, jmeWindowLocation)
 
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
@@ -81,7 +81,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
 
         // re-load if exists
-        SavedSceneReader(assetNodeManager, assetMenu).loadFromFile()
+        SavedSceneReader(assetNodeManager, assetMenu, libraryMenu).loadFromFile()
 
         // show GUI
         assetMenu.isVisible = true

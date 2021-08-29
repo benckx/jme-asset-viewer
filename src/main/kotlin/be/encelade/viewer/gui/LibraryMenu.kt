@@ -1,6 +1,7 @@
 package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.persistence.SavedSceneWriter
 import be.encelade.viewer.utils.LazyLogging
 import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesKey
@@ -11,11 +12,12 @@ import javax.swing.JFrame
 
 class LibraryMenu(properties: PropertiesFile,
                   commandQueue: CommandQueue,
+                  savedSceneWriter: SavedSceneWriter,
                   assetMenu: AssetMenu,
                   jmeLocation: Point) : JFrame(), LazyLogging {
 
     private val context = GuiContext(properties)
-    private val libraryButtonPanel = LibraryButtonPanel(context) { file -> addFileToLibrary(file) }
+    private val libraryButtonPanel = LibraryButtonPanel(context, savedSceneWriter) { file -> addFileToLibrary(file) }
     private val libraryListPanel = LibraryListPanel(commandQueue, assetMenu)
 
     init {
@@ -39,6 +41,10 @@ class LibraryMenu(properties: PropertiesFile,
         if (!libraryListPanel.alreadyInList(file)) {
             libraryListPanel.add(file)
         }
+    }
+
+    fun disableFocus() {
+        libraryListPanel.disableFocus()
     }
 
 }

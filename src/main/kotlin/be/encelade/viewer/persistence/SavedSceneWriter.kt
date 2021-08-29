@@ -42,7 +42,7 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLog
                 .listAllSceneNodes()
                 .map { sceneNode -> toDto(sceneNode) }
 
-        val sceneDTO = SceneDto(sceneNodeDTOs)
+        val sceneDTO = SceneDto(sceneNodeDTOs, listOf())
         val millis = measureTimeMillis {
             val json = jsonMapper.writeValueAsString(sceneDTO)
             Files.write(Paths.get(SAVED_SCENE_FILE_NAME), json.toByteArray(UTF_8))
