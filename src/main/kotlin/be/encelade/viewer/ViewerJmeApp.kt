@@ -5,6 +5,7 @@ import be.encelade.chimp.utils.ColorHelperUtils.ColorRGBA
 import be.encelade.ouistiti.CameraManager
 import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
+import be.encelade.viewer.gui.LibraryFileSupplier
 import be.encelade.viewer.gui.LibraryMenu
 import be.encelade.viewer.input.MouseClickActionListener
 import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
@@ -36,10 +37,12 @@ class ViewerJmeApp(private val properties: PropertiesFile,
 
     private lateinit var cameraManager: CameraManager
 
+    private val libraryFileSupplier = LibraryFileSupplier()
+
     private val mouseInputManager = MouseInputManager(this)
     private val assetNodeManager = AssetNodeManager(this)
     private val boundingBoxManager = BoundingBoxManager(this)
-    private val savedSceneWriter = SavedSceneWriter(assetNodeManager)
+    private val savedSceneWriter = SavedSceneWriter(assetNodeManager, libraryFileSupplier)
 
     private val commandQueue = CommandQueue()
     private val commandExecutor = CommandExecutor(this, commandQueue, assetNodeManager, boundingBoxManager, savedSceneWriter)
@@ -74,6 +77,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         val jmeWindowLocation = findLocationOfJmeWindow()
         assetMenu = AssetMenu(properties, commandQueue, jmeWindowLocation)
         libraryMenu = LibraryMenu(properties, commandQueue, savedSceneWriter, assetMenu, jmeWindowLocation)
+        libraryFileSupplier.listModel = libraryMenu.getListModel()
 
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)

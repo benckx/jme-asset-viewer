@@ -8,6 +8,7 @@ import be.encelade.viewer.utils.PropertiesKey
 import java.awt.BorderLayout
 import java.awt.Point
 import java.io.File
+import javax.swing.DefaultListModel
 import javax.swing.JFrame
 
 class LibraryMenu(properties: PropertiesFile,
@@ -40,7 +41,13 @@ class LibraryMenu(properties: PropertiesFile,
     fun addFileToLibrary(file: File) {
         if (!libraryListPanel.alreadyInList(file)) {
             libraryListPanel.add(file)
+        } else {
+            logger.warn("$file already in library")
         }
+    }
+
+    fun getListModel(): DefaultListModel<File> {
+        return libraryListPanel.listModel
     }
 
     fun disableFocus() {

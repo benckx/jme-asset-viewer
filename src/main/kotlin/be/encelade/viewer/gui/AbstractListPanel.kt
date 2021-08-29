@@ -16,7 +16,7 @@ import javax.swing.*
 internal abstract class AbstractListPanel<T>(title: String, protected val commandQueue: CommandQueue) :
         JPanel(), LazyLogging {
 
-    protected val listModel = DefaultListModel<T>()
+    val listModel = DefaultListModel<T>()
     private val list = JList(listModel)
     private val scrollPane = JScrollPane(list)
 

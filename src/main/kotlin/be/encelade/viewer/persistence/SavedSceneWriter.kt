@@ -9,13 +9,16 @@ import be.encelade.viewer.utils.LazyLogging
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.function.Supplier
 import kotlin.system.measureTimeMillis
 import kotlin.text.Charsets.UTF_8
 
-class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLogging, TpfAccumulable {
+class SavedSceneWriter(private val assetNodeManager: AssetNodeManager,
+                       private val libraryFileSupplier: Supplier<List<File>>) : LazyLogging, TpfAccumulable {
 
     private val jsonMapper = ObjectMapper()
             .registerModule(KotlinModule())
@@ -42,7 +45,8 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager) : LazyLog
                 .listAllSceneNodes()
                 .map { sceneNode -> toDto(sceneNode) }
 
-        val sceneDTO = SceneDto(sceneNodeDTOs, listOf())
+        val filePaths = libraryFileSupplier.get().map { it.absolutePath }
+        val sceneDTO = SceneDto(sceneNodeDTOs, filePaths)
         val millis = measureTimeMillis {
             val json = jsonMapper.writeValueAsString(sceneDTO)
             Files.write(Paths.get(SAVED_SCENE_FILE_NAME), json.toByteArray(UTF_8))
