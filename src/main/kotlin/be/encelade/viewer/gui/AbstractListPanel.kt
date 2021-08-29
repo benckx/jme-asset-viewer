@@ -86,6 +86,13 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
         }
     }
 
+    internal fun clear() {
+        executeWithoutListener {
+            listModel.clear()
+            list.clearSelection()
+        }
+    }
+
     internal fun show(value: T) {
         executeWithoutListener {
             list.selectedIndex = indexOf(value)

@@ -18,8 +18,8 @@ class LibraryMenu(properties: PropertiesFile,
                   jmeLocation: Point) : JFrame(), LazyLogging {
 
     private val context = GuiContext(properties)
-    private val libraryButtonPanel = LibraryButtonPanel(context, savedSceneWriter) { file -> addFileToLibrary(file) }
     private val libraryListPanel = LibraryListPanel(commandQueue, assetMenu)
+    private val libraryButtonPanel = LibraryButtonPanel(context, libraryListPanel, savedSceneWriter)
 
     init {
         val jmeWidth = properties.getProperty(PropertiesKey.WIDTH)!!.toInt()
