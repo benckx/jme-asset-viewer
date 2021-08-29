@@ -18,11 +18,11 @@ internal class AssetListPanel(commandQueue: CommandQueue, private val parent: As
     }
 
     override fun indexOf(value: SceneNode): Int {
-        return listModel.elements()!!.toList().indexOf(value)
+        return listItems().indexOf(value)
     }
 
     override fun indexOf(id: String): Int {
-        return listModel.elements()!!.toList().indexOfFirst { sceneNode -> sceneNode.id() == id }
+        return listItems().indexOfFirst { sceneNode -> sceneNode.id() == id }
     }
 
 }

@@ -16,7 +16,7 @@ import javax.swing.*
 internal abstract class AbstractListPanel<T>(title: String, protected val commandQueue: CommandQueue) :
         JPanel(), LazyLogging {
 
-    val listModel = DefaultListModel<T>()
+    private val listModel = DefaultListModel<T>()
     private val list = JList(listModel)
     private val scrollPane = JScrollPane(list)
 
@@ -62,6 +62,14 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
 
     open fun onDoubleClick(value: T) {
         logger.debug("$value double-clicked")
+    }
+
+    protected fun listItems(): List<T> {
+        return getListModel().elements()!!.toList()
+    }
+
+    internal fun getListModel(): DefaultListModel<T> {
+        return listModel
     }
 
     internal fun add(value: T) {

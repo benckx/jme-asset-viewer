@@ -47,7 +47,7 @@ class LibraryMenu(properties: PropertiesFile,
     }
 
     fun getListModel(): DefaultListModel<File> {
-        return libraryListPanel.listModel
+        return libraryListPanel.getListModel()
     }
 
     fun disableFocus() {

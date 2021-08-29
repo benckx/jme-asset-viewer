@@ -12,11 +12,11 @@ internal class LibraryListPanel(commandQueue: CommandQueue, private val assetMen
     }
 
     override fun indexOf(value: File): Int {
-        return listModel.elements()!!.toList().indexOf(value)
+        return listItems().indexOf(value)
     }
 
     override fun indexOf(id: String): Int {
-        return listModel.elements()!!.toList().indexOfFirst { file -> file.absolutePath == id }
+        return listItems().indexOfFirst { file -> file.absolutePath == id }
     }
 
     fun alreadyInList(file: File): Boolean {
