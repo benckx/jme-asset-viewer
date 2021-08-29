@@ -9,6 +9,8 @@
 This tool is to help smooth work between 3D designers and developers, by providing 3D designers a simple GUI to quickly
 test assets in a jMonkeyEngine scene and change their settings at runtime.
 
+![](img/viewer1.png)
+
 # How To
 
 ## Run
