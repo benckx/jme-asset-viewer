@@ -18,4 +18,8 @@ internal class LibraryListPanel(commandQueue: CommandQueue) :
         return listModel.elements()!!.toList().indexOfFirst { file -> file.absolutePath == id }
     }
 
+    fun alreadyInList(file: File): Boolean {
+        return indexOf(file) > -1
+    }
+
 }

@@ -5,6 +5,8 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.commands.DeleteAssetNodeCommand
 import be.encelade.viewer.commands.ImportAssetCommand
 import be.encelade.viewer.gui.GuiUtils.buildFileChooser
+import be.encelade.viewer.gui.GuiUtils.copy
+import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
 import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.GridLayout
@@ -23,6 +25,7 @@ internal class AssetButtonPanel(commandQueue: CommandQueue,
 
     init {
         layout = GridLayout(0, 1)
+        border = createDefaultPanelBorder().copy(top = 3)
 
         add(importButton)
         add(deleteButton)
