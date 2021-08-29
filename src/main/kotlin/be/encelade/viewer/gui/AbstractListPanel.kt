@@ -8,7 +8,10 @@ import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.BorderLayout
 import java.awt.Font
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.*
+
 
 internal abstract class AbstractListPanel<T>(title: String, protected val commandQueue: CommandQueue) :
         JPanel(), LazyLogging {
@@ -43,10 +46,22 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
                 list.selectedValue?.let { value -> onSelect(value) }
             }
         }
+
+        list.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(evt: MouseEvent) {
+                if (isListenerEnabled && evt.clickCount == 2) {
+                    onDoubleClick(list.selectedValue)
+                }
+            }
+        })
     }
 
     open fun onSelect(value: T) {
         logger.debug("$value selected")
+    }
+
+    open fun onDoubleClick(value: T) {
+        logger.debug("$value double-clicked")
     }
 
     internal fun add(value: T) {

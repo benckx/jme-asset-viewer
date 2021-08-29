@@ -9,11 +9,14 @@ import java.awt.Point
 import java.io.File
 import javax.swing.JFrame
 
-class LibraryMenu(properties: PropertiesFile, commandQueue: CommandQueue, jmeLocation: Point) : JFrame(), LazyLogging {
+class LibraryMenu(properties: PropertiesFile,
+                  commandQueue: CommandQueue,
+                  assetMenu: AssetMenu,
+                  jmeLocation: Point) : JFrame(), LazyLogging {
 
     private val context = GuiContext(properties)
     private val libraryButtonPanel = LibraryButtonPanel(context) { file -> addFileToLibrary(file) }
-    private val libraryListPanel = LibraryListPanel(commandQueue)
+    private val libraryListPanel = LibraryListPanel(commandQueue, assetMenu)
 
     init {
         val jmeWidth = properties.getProperty(PropertiesKey.WIDTH)!!.toInt()

@@ -73,7 +73,7 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         // input and GUI
         val jmeWindowLocation = findLocationOfJmeWindow()
         assetMenu = AssetMenu(properties, commandQueue, jmeWindowLocation)
-        libraryMenu = LibraryMenu(properties, commandQueue, jmeWindowLocation)
+        libraryMenu = LibraryMenu(properties, commandQueue, assetMenu, jmeWindowLocation)
 
         // actions and mappings
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
