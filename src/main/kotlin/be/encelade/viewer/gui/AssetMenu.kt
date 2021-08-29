@@ -44,6 +44,10 @@ class AssetMenu(properties: PropertiesFile, commandQueue: CommandQueue, jmeLocat
         assetListPanel.remove(id)
     }
 
+    fun clear() {
+        assetListPanel.clear()
+    }
+
     fun show(sceneNode: SceneNode, showInList: Boolean = true) {
         context.assetUpdateEnabled = false
         context.selectedAssetNode = sceneNode.assetNode

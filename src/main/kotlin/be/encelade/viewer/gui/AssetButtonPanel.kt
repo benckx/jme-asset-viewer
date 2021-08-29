@@ -1,9 +1,6 @@
 package be.encelade.viewer.gui
 
-import be.encelade.viewer.commands.CloneCommand
-import be.encelade.viewer.commands.CommandQueue
-import be.encelade.viewer.commands.DeleteAssetNodeCommand
-import be.encelade.viewer.commands.ImportAssetCommand
+import be.encelade.viewer.commands.*
 import be.encelade.viewer.gui.GuiUtils.buildFileChooser
 import be.encelade.viewer.gui.GuiUtils.copy
 import be.encelade.viewer.gui.GuiUtils.createDefaultPanelBorder
@@ -22,6 +19,7 @@ internal class AssetButtonPanel(commandQueue: CommandQueue,
     private val importButton = JButton("Import")
     private val cloneButton = JButton("Clone")
     private val deleteButton = JButton("Delete")
+    private val deleteAllButton = JButton("Delete All")
 
     init {
         layout = GridLayout(0, 1)
@@ -30,6 +28,7 @@ internal class AssetButtonPanel(commandQueue: CommandQueue,
         add(importButton)
         add(deleteButton)
         add(cloneButton)
+        add(deleteAllButton)
         components.forEach { component -> component.font = guiFont }
 
         disableFocus()
@@ -64,6 +63,13 @@ internal class AssetButtonPanel(commandQueue: CommandQueue,
                     parent.disableFocus()
                 })
             }
+        }
+
+        deleteAllButton.addActionListener {
+            commandQueue.queue(DeleteAllCommand {
+                parent.clear()
+                parent.disableFocus()
+            })
         }
     }
 

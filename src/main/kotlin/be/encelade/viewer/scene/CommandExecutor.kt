@@ -18,10 +18,14 @@ class CommandExecutor(app: SimpleApplication,
     override fun simpleUpdate(tpf: Float) {
         commandQueue.flushImportCommands().forEach { command ->
             logger.debug("executing $command")
-            val sceneNode = assetNodeManager.importAsset(command.file)
-            boundingBoxManager.drawBoundingBox(sceneNode)
-            command.callback(sceneNode)
-            savedSceneWriter.requestWriteToFile()
+            try {
+                val sceneNode = assetNodeManager.importAsset(command.file)
+                boundingBoxManager.drawBoundingBox(sceneNode)
+                command.callback(sceneNode)
+                savedSceneWriter.requestWriteToFile()
+            } catch (t: Throwable) {
+
+            }
         }
 
         commandQueue.flushDeleteCommands().forEach { command ->
@@ -40,6 +44,13 @@ class CommandExecutor(app: SimpleApplication,
                 command.callback(sceneNode)
                 savedSceneWriter.requestWriteToFile()
             }
+        }
+
+        commandQueue.flushDeleteAllCommands().forEach { command ->
+            logger.debug("executing $command")
+            assetNodeManager.deleteAll()
+            command.callback()
+            savedSceneWriter.requestWriteToFile()
         }
 
         commandQueue.flushSelectionCommands().forEach { command ->

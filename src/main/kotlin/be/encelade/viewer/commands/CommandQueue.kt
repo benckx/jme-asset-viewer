@@ -11,6 +11,7 @@ class CommandQueue : LazyLogging {
     private val importAssetCommands = mutableListOf<ImportAssetCommand>()
     private val deleteAssetNodeCommands = mutableListOf<DeleteAssetNodeCommand>()
     private val cloneCommands = mutableListOf<CloneCommand>()
+    private val deleteAllCommands = mutableListOf<DeleteAllCommand>()
 
     private val selectAssetCommands = mutableListOf<SelectAssetCommand>()
 
@@ -30,6 +31,11 @@ class CommandQueue : LazyLogging {
 
     fun queue(command: CloneCommand) {
         cloneCommands += command
+        logger.debug("queued $command")
+    }
+
+    fun queue(command: DeleteAllCommand) {
+        deleteAllCommands += command
         logger.debug("queued $command")
     }
 
@@ -58,6 +64,8 @@ class CommandQueue : LazyLogging {
     fun flushDeleteCommands() = flushCommands(deleteAssetNodeCommands)
 
     fun flushCloneCommands() = flushCommands(cloneCommands)
+
+    fun flushDeleteAllCommands() = flushCommands(deleteAllCommands)
 
     fun flushSelectionCommands() = flushCommands(selectAssetCommands)
 
