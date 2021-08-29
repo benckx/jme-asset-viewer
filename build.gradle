@@ -31,6 +31,7 @@ dependencies {
     compile "org.jmonkeyengine:jme3-core:$jmeVersion"
     compile "org.jmonkeyengine:jme3-desktop:$jmeVersion"
     compile "org.jmonkeyengine:jme3-lwjgl3:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-plugins:$jmeVersion"
 
     // jme libs
     compile "com.github.benckx:ouistiti:$ouistitiVersion"
