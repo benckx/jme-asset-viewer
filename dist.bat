@@ -3,7 +3,7 @@ call dist-clean.bat
 for /f %%i in ('findstr version gradle.properties') do set gradleVersion=%%i
 set softwareVersion=%gradleVersion:~8%
 set jarFile=jme-viewer-%softwareVersion%.jar
-set distWinFolder=dist-win64-%softwareVersion%
+set distWinFolder=viewer-win64-%softwareVersion%
 
 echo %gradleVersion%
 echo %softwareVersion%
