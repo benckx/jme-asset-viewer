@@ -22,10 +22,7 @@ internal class AssetListPanel(commandQueue: CommandQueue, private val parent: As
 
     override fun onKeyPressed(value: SceneNode, e: KeyEvent) {
         if (e.keyCode == VK_DELETE) {
-            commandQueue.queue(DeleteAssetNodeCommand(value.id()) {
-                parent.removeFromAssetList(value.id())
-                parent.disableFocus()
-            })
+            commandQueue.queue(DeleteAssetNodeCommand(value.assetNode, parent))
         }
     }
 

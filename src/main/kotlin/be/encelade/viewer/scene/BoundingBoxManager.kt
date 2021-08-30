@@ -16,28 +16,31 @@ import java.awt.Color.GREEN
 class BoundingBoxManager(app: SimpleApplication) : LazyLogging {
 
     private val rootNode by lazy { app.rootNode }
-    private var currentlyDrawn: String? = null
+    private var currentSceneNode: SceneNode? = null
 
-    fun currentlySelected(): String? {
-        return currentlyDrawn
+    fun currentSceneNode(): SceneNode? {
+        return currentSceneNode
     }
 
     fun reDrawBoundingBox(node: Node) {
-        deleteBoundingBox()
+        deleteBoundingBox(clearState = false)
         drawBoundingBox(node)
     }
 
-    fun deleteBoundingBox() {
+    fun deleteBoundingBox(clearState: Boolean = true) {
         rootNode.detachChildNamed(SELECTED_ASSET)
-        currentlyDrawn = null
+        if (clearState) {
+            currentSceneNode = null
+        }
     }
 
     fun drawBoundingBox(sceneNode: SceneNode): Geometry? {
+        this.currentSceneNode = sceneNode
         return drawBoundingBox(sceneNode.node)
     }
 
     private fun drawBoundingBox(node: Node): Geometry? {
-        deleteBoundingBox()
+        deleteBoundingBox(clearState = false)
 
         val volume = extractBoundingVolume(node)
         if (volume is BoundingBox) {
@@ -53,8 +56,6 @@ class BoundingBoxManager(app: SimpleApplication) : LazyLogging {
             box.localScale = node.localScale
             box.move(volume.center)
             rootNode.attachChild(box)
-
-            currentlyDrawn = node.name
 
             return box
         }

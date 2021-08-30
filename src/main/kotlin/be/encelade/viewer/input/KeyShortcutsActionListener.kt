@@ -15,11 +15,8 @@ class KeyShortcutsActionListener(private val boundingBoxManager: BoundingBoxMana
         if (isPressed) {
             when (name) {
                 DELETE_ASSET -> {
-                    boundingBoxManager.currentlySelected()?.let { id ->
-                        commandQueue.queue(DeleteAssetNodeCommand(id) {
-                            assetMenu.removeFromAssetList(id)
-                            assetMenu.disableFocus()
-                        })
+                    boundingBoxManager.currentSceneNode()?.let { sceneNode ->
+                        commandQueue.queue(DeleteAssetNodeCommand(sceneNode.assetNode, assetMenu))
                     }
                 }
             }

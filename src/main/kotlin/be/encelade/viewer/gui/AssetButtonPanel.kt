@@ -58,10 +58,7 @@ internal class AssetButtonPanel(commandQueue: CommandQueue,
 
         deleteButton.addActionListener {
             context.selectedAssetNode?.let { assetNode ->
-                commandQueue.queue(DeleteAssetNodeCommand(assetNode.id) {
-                    parent.removeFromAssetList(assetNode.id)
-                    parent.disableFocus()
-                })
+                commandQueue.queue(DeleteAssetNodeCommand(assetNode, parent))
             }
         }
 
