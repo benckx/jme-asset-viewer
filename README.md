@@ -15,8 +15,13 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
 
 ## Run
 
-* **From the zip file:** Uncompress and simply run the bat file `viewer.bat`
-* **From source code:** Run the Main file in your favorite IDE.
+* **From the zip file:**
+  * Uncompress and simply run the bat file `viewer.bat`
+  * `viewer_skip_jme.bat` will skip the jMonkeyEngine default settings screen, and the app will load with the last
+    settings you selected (only resolution is saved to the preferences file so far, but other settings should follow)
+  * The ZIP file contains both the app JAR and a JRE for Java 8.
+* **From source code:**
+  * Run the Main file in your favorite IDE.
 
 ### Arguments
 
