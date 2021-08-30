@@ -1,2 +1,2 @@
-for /d %%G in ("dist-win64-*") do rd /s /q "%%G"
+for /d %%G in ("viewer-win64-*") do rd /s /q "%%G"
 del /s *.zip
