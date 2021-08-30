@@ -7,6 +7,8 @@ import be.encelade.viewer.commands.CommandQueue
 import be.encelade.viewer.gui.AssetMenu
 import be.encelade.viewer.gui.LibraryFileSupplier
 import be.encelade.viewer.gui.LibraryMenu
+import be.encelade.viewer.input.KeyShortcutsActionListener
+import be.encelade.viewer.input.KeyShortcutsActionListener.Companion.DELETE_ASSET
 import be.encelade.viewer.input.MouseClickActionListener
 import be.encelade.viewer.input.MouseClickActionListener.Companion.LEFT_CLICK
 import be.encelade.viewer.input.MouseInputManager
@@ -20,7 +22,9 @@ import be.encelade.viewer.utils.PropertiesFile
 import be.encelade.viewer.utils.PropertiesKey.HEIGHT
 import be.encelade.viewer.utils.PropertiesKey.WIDTH
 import com.jme3.app.SimpleApplication
+import com.jme3.input.KeyInput.KEY_DELETE
 import com.jme3.input.MouseInput.BUTTON_LEFT
+import com.jme3.input.controls.KeyTrigger
 import com.jme3.input.controls.MouseButtonTrigger
 import com.jme3.light.AmbientLight
 import com.jme3.light.DirectionalLight
@@ -83,6 +87,10 @@ class ViewerJmeApp(private val properties: PropertiesFile,
         val mouseClickActionListener = MouseClickActionListener(rootNode, mouseInputManager, assetNodeManager, boundingBoxManager, assetMenu)
         inputManager.addListener(mouseClickActionListener, LEFT_CLICK)
         inputManager.addMapping(LEFT_CLICK, MouseButtonTrigger(BUTTON_LEFT))
+
+        val keyShortcutsActionListener = KeyShortcutsActionListener(boundingBoxManager, commandQueue, assetMenu)
+        inputManager.addListener(keyShortcutsActionListener, DELETE_ASSET)
+        inputManager.addMapping(DELETE_ASSET, KeyTrigger(KEY_DELETE))
 
         // re-load if exists
         SavedSceneReader(assetNodeManager, assetMenu, libraryMenu).loadFromFile()

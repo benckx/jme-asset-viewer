@@ -8,6 +8,8 @@ import be.encelade.viewer.gui.GuiUtils.guiFont
 import be.encelade.viewer.utils.LazyLogging
 import java.awt.BorderLayout
 import java.awt.Font
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -54,6 +56,19 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
                 }
             }
         })
+
+        list.addKeyListener(object : KeyListener {
+            override fun keyTyped(e: KeyEvent?) {}
+
+            override fun keyPressed(e: KeyEvent?) {
+                if (isListenerEnabled) {
+                    onKeyPressed(list.selectedValue, e!!)
+                }
+            }
+
+            override fun keyReleased(e: KeyEvent?) {}
+
+        })
     }
 
     open fun onSelect(value: T) {
@@ -62,6 +77,10 @@ internal abstract class AbstractListPanel<T>(title: String, protected val comman
 
     open fun onDoubleClick(value: T) {
         logger.debug("$value double-clicked")
+    }
+
+    open fun onKeyPressed(value: T, e: KeyEvent) {
+        logger.debug("key ${e.keyCode} on $value")
     }
 
     protected fun listItems(): List<T> {

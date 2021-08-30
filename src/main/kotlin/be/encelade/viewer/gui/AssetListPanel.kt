@@ -1,8 +1,11 @@
 package be.encelade.viewer.gui
 
 import be.encelade.viewer.commands.CommandQueue
+import be.encelade.viewer.commands.DeleteAssetNodeCommand
 import be.encelade.viewer.commands.SelectAssetCommand
 import be.encelade.viewer.scene.SceneNode
+import java.awt.event.KeyEvent
+import java.awt.event.KeyEvent.VK_DELETE
 
 internal class AssetListPanel(commandQueue: CommandQueue, private val parent: AssetMenu) :
         AbstractListPanel<SceneNode>("Scene Assets", commandQueue) {
@@ -15,6 +18,15 @@ internal class AssetListPanel(commandQueue: CommandQueue, private val parent: As
         commandQueue.queue(SelectAssetCommand(value) {
             parent.show(value, showInList = false)
         })
+    }
+
+    override fun onKeyPressed(value: SceneNode, e: KeyEvent) {
+        if (e.keyCode == VK_DELETE) {
+            commandQueue.queue(DeleteAssetNodeCommand(value.id()) {
+                parent.removeFromAssetList(value.id())
+                parent.disableFocus()
+            })
+        }
     }
 
     override fun indexOf(value: SceneNode): Int {
