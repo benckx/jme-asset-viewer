@@ -8,9 +8,9 @@ import java.io.File
  * @param id is used to identified which asset has been selected by clicking in the scene,
  *        it will be used as the name of all [com.jme3.scene.Spatial] of the import asset.
  */
-data class AssetNode(val id: String, val file: File) {
+data class AssetNode(val id: String, val absolutePath: String) {
 
-    val fileName = file.path.split(File.separator).last()
+    val fileName = absolutePath.split(File.separator).last()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

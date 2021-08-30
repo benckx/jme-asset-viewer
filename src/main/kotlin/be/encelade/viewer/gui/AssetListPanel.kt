@@ -5,7 +5,7 @@ import be.encelade.viewer.commands.SelectAssetCommand
 import be.encelade.viewer.scene.SceneNode
 
 internal class AssetListPanel(commandQueue: CommandQueue, private val parent: AssetMenu) :
-        AbstractListPanel<SceneNode>("Scene Asset", commandQueue) {
+        AbstractListPanel<SceneNode>("Scene Assets", commandQueue) {
 
     override fun renderItemName(value: SceneNode): String {
         return value.assetNode.fileName

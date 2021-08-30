@@ -58,7 +58,7 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager,
     private fun toDto(sceneNode: SceneNode): SceneNodeDto {
         return SceneNodeDto(
                 sceneNode.id(),
-                sceneNode.assetNode.file.absolutePath,
+                sceneNode.assetNode.absolutePath,
                 sceneNode.node.localTranslation,
                 sceneNode.node.localRotation,
                 sceneNode.node.localScale)

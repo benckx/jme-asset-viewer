@@ -63,9 +63,28 @@ The green Bounding Box that highlights asset selection in the JME scene shifts o
 scaled or rotated. I think it has to do with the w rotation parameter, as I don't fully
 understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.html) yet
 
+# Change logs
+
+## Version 1.1
+
+* Fix bug where cloned assets would not be found on scene reload
+* Fix spelling mistakes
+
+## Version 1.0
+
+* Import/Add Assets to the scene
+* Move, rotate, scale assets (by editing text fields values or with mouse wheel)
+* Delete an asset from the scene
+* Clone/Duplicate an asset from the scene
+* Scan folders and list all assets to the "Library" panel
+* Automatic save of the scene
+
 # Related Projects
 
 * **ouistiti**: A basic camera manager for management/strategy games:<br/>
   https://github.com/benckx/ouistiti
 * **chimp-utils**: A collection of Kotlin APIs and helpers for jMonkeyEngine:<br/>
   https://github.com/benckx/chimp-utils
+* **jme-asset-viewer**: Minimalist GUI to preview/test 3D assets in a jMonkeyEngine scene:<br/>
+  https://github.com/benckx/jme-asset-viewer
+ 

@@ -29,7 +29,7 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         node.attachChild(spatial)
         node.move(offset)
 
-        val assetNode = AssetNode(spatial.name, file)
+        val assetNode = AssetNode(spatial.name, file.absolutePath)
         assetNodes += assetNode
         rootNode.attachChild(node)
 
@@ -79,10 +79,11 @@ class AssetNodeManager(private val app: SimpleApplication) : LazyLogging {
         val sourceNode = rootNode.getChild(id)
 
         if (sourceAssetNode != null && sourceNode != null) {
-            val file = File(sourceAssetNode.file.name)
-            val spatial = loadAssetSpatial(file)
+            val absolutePath = sourceAssetNode.absolutePath
+            val file = File(absolutePath)
 
-            val assetNode = AssetNode(spatial.name, file)
+            val spatial = loadAssetSpatial(file)
+            val assetNode = AssetNode(spatial.name, absolutePath)
             val node = Node(spatial.name)
             node.attachChild(spatial)
             node.localTranslation = sourceNode.localTranslation
