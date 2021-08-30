@@ -68,6 +68,7 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
 ## Version 1.1
 
 * Fix bug where cloned assets would not be found on scene reload
+* Delete selected asset from scene with the DELETE key
 * Fix spelling mistakes
 
 ## Version 1.0
