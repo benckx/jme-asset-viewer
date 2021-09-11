@@ -14,7 +14,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-
 internal abstract class AbstractListPanel<T>(title: String, protected val commandQueue: CommandQueue) :
         JPanel(), LazyLogging {
 
