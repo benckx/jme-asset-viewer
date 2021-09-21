@@ -16,11 +16,14 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
 ## Run
 
 * **From the zip file:**
-  * Uncompress and simply run the bat file `viewer.bat`
-  * `viewer_skip_jme.bat` will skip the jMonkeyEngine default settings screen, and the app will load with the last
-    settings you selected (only resolution is saved to the preferences file so far, but other settings should follow)
-  * The ZIP file contains both the app JAR and a JRE for Java 8.
-  * On the Windows 10 warning message, click "More Info", then "Run anyway".
+  * On Windows:
+    * Decompress and simply run the bat file `viewer.bat`
+    * `viewer_skip_jme.bat` will skip the jMonkeyEngine default settings screen, and the app will load with the last
+      settings you selected (only resolution is saved to the preferences file so far, but other settings should follow)
+    * The ZIP file contains both the app JAR and a JRE for Java 8.
+    * On the Windows 10 warning message, click "More Info", then "Run anyway".
+  * On Linux:
+    * Run the jar on Java 8.
 * **From source code:**
   * Run the Main file in your favorite IDE.
 
@@ -94,4 +97,3 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
   https://github.com/benckx/chimp-utils
 * **jme-asset-viewer**: Minimalist GUI to preview/test 3D assets in a jMonkeyEngine scene:<br/>
   https://github.com/benckx/jme-asset-viewer
- 
