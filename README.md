@@ -23,7 +23,7 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
     * The ZIP file contains both the app JAR and a JRE for Java 8.
     * On the Windows 10 warning message, click "More Info", then "Run anyway".
   * On Linux:
-    * Run the jar on Java 8.
+    * Run the JAR on Java 8: `java -jar jme-viewer.jar`
 * **From source code:**
   * Run the Main file in your favorite IDE.
 
