@@ -114,7 +114,6 @@ internal class AssetCoordinatesPanel(private val commandQueue: CommandQueue,
                 commandQueue.queue(ScaleCommand(assetNode.id, scaleField.text.toFloat()))
             }
         }
-
     }
 
     internal fun show(node: Node) {

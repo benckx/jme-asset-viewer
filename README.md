@@ -16,13 +16,17 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
 ## Run
 
 * **From the zip file:**
-  * Uncompress and simply run the bat file `viewer.bat`
-  * `viewer_skip_jme.bat` will skip the jMonkeyEngine default settings screen, and the app will load with the last
-    settings you selected (only resolution is saved to the preferences file so far, but other settings should follow)
-  * The ZIP file contains both the app JAR and a JRE for Java 8.
-  * On the Windows 10 warning message, click "More Info", then "Run anyway".
+    * On Windows:
+        * Decompress and simply run the bat file `viewer.bat`
+        * `viewer_skip_jme.bat` will skip the jMonkeyEngine default settings screen, and the app will load with the last
+          settings you selected (only resolution is saved to the preferences file so far, but other settings should
+          follow)
+        * The ZIP file contains both the app JAR and a JRE for Java 8.
+        * On the Windows 10 warning message, click "More Info", then "Run anyway".
+    * On Linux:
+        * Run the JAR on Java 8: `java -jar jme-viewer.jar`
 * **From source code:**
-  * Run the Main file in your favorite IDE.
+    * Run the Main file in your favorite IDE.
 
 ### Arguments
 
@@ -61,13 +65,18 @@ X Error of failed request:  BadWindow (invalid Window parameter)
   Current serial number in output stream:  2511
 ```
 
-It doesn't happen when only the GUI is loaded.
+It doesn't happen when only the GUI is loaded (i.e. it happens only when the JME windows is loaded).
 
 ## Offset Bounding Box
 
 The green Bounding Box that highlights asset selection in the JME scene shifts out of its center when the asset is
 scaled or rotated. I think it has to do with the w rotation parameter, as I don't fully
 understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.html) yet
+
+# Future Changes
+
+* Save all JME settings to the `preferences.properties` file (samples, vsync, etc.)
+* Add a window to change light settings.
 
 # Change logs
 
@@ -100,4 +109,3 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
   https://github.com/benckx/chimp-utils
 * **jme-asset-viewer**: Minimalist GUI to preview/test 3D assets in a jMonkeyEngine scene:<br/>
   https://github.com/benckx/jme-asset-viewer
- 
