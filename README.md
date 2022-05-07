@@ -71,6 +71,12 @@ understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.ht
 
 # Change logs
 
+## Version 1.2.0
+
+* Upgrade Kotlin from `1.5.21` to `1.6.21`
+* Upgrade [jMonkeyEngine3](https://jmonkeyengine.org/) from `3.4.0-stable` to `3.5.2-stable`
+* Upgrade libraries
+
 ## Version 1.1
 
 * Fix bug where cloned assets would not be found on scene reload
