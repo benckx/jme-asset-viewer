@@ -8,7 +8,7 @@ import be.encelade.viewer.scene.SceneNode
 import be.encelade.viewer.utils.LazyLogging
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -21,7 +21,7 @@ class SavedSceneWriter(private val assetNodeManager: AssetNodeManager,
                        private val libraryFileSupplier: Supplier<List<File>>) : LazyLogging, TpfAccumulable {
 
     private val jsonMapper = ObjectMapper()
-            .registerModule(KotlinModule())
+            .registerModule(kotlinModule())
             .registerModule(JmeModule())
             .configure(INDENT_OUTPUT, true)
 
