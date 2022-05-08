@@ -26,10 +26,6 @@ object GeometryUtils {
     private fun extractAllGeometries(node: Node): List<Geometry> {
         val geometries = mutableListOf<Geometry>()
 
-        if (node is Geometry) {
-            geometries += node
-        }
-
         node.children.filterIsInstance<Geometry>().forEach { geometry ->
             geometries += geometry
         }

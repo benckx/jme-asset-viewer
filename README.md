@@ -71,7 +71,7 @@ It doesn't happen when only the GUI is loaded (i.e. it happens only when the JME
 
 The green Bounding Box that highlights asset selection in the JME scene shifts out of its center when the asset is
 scaled or rotated. I think it has to do with the w rotation parameter, as I don't fully
-understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.4.0-stable/index.html) yet
+understand [Quaternion](https://javadoc.jmonkeyengine.org/v3.5.2-stable/com/jme3/math/Quaternion.html) yet
 
 # Future Changes
 
