@@ -44,7 +44,7 @@ dependencies {
 
     // utils
     compile "org.apache.commons:commons-text:1.9"
-    compile "com.github.guepardoapps:kulid:1.1.2.0"
+    compile "com.github.guepardoapps:kulid:2.0.0.0"
 
     // persistence
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
