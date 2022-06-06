@@ -37,7 +37,7 @@ test assets in a jMonkeyEngine scene and change their settings at runtime.
 
 - Move with right-click or WASD keys
 - Zoom in and out with mouse wheel
-- Rotate with B and N or by pressing Left Control when moving with right-click
+- Rotate with Q and E or by pressing Left Control when moving with right-click
 
 The app uses the [*ouistiti* camera manager library](https://github.com/benckx/ouistiti).
 
