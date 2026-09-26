@@ -1,0 +1,32 @@
+[versions]
+kotlin = "2.4.20"
+benManesVersions = "0.64.0"
+jme = "3.9.0-stable"
+ouistiti = "2.2.2"
+chimpUtils = "1.8.0"
+slf4j = "2.0.16"
+logback = "1.5.12"
+commonsText = "1.12.0"
+kulid = "2.0.0.0"
+jackson = "2.18.2"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+jme-core = { module = "org.jmonkeyengine:jme3-core", version.ref = "jme" }
+jme-desktop = { module = "org.jmonkeyengine:jme3-desktop", version.ref = "jme" }
+jme-lwjgl3 = { module = "org.jmonkeyengine:jme3-lwjgl3", version.ref = "jme" }
+jme-plugins = { module = "org.jmonkeyengine:jme3-plugins", version.ref = "jme" }
+ouistiti = { module = "com.github.benckx:ouistiti", version.ref = "ouistiti" }
+chimp-utils-basics = { module = "com.github.benckx.chimp-utils:chimp-utils-basics", version.ref = "chimpUtils" }
+chimp-utils-jme3 = { module = "com.github.benckx.chimp-utils:chimp-utils-jme3", version.ref = "chimpUtils" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+commons-text = { module = "org.apache.commons:commons-text", version.ref = "commonsText" }
+kulid = { module = "com.github.guepardoapps:kulid", version.ref = "kulid" }
+jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "benManesVersions" }
